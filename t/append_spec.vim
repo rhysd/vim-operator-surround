@@ -16,6 +16,7 @@ endfunction
 
 command! -nargs=+ -count=0 Line call <SID>line(<args>, <count>)
 
+" characterwise {{{
 describe '<Plug>(operator-surround-append)'
     before
         map s <Plug>(operator-surround-append)
@@ -99,3 +100,12 @@ describe '<Plug>(operator-surround-append)'
         endtry
     end
 end
+" }}}
+
+" linewise {{{
+" TODO not implemented yet
+" }}}
+
+" blockwise {{{
+" TODO not implemented yet
+" }}}
