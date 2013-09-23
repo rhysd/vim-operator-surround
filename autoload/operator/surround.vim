@@ -19,22 +19,24 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
     call s:merge( g:operator#surround#blocks,
                 \ {
                 \   '-' : [
-                \       { 'block' : ['(', ')'], 'mode' : "vV\<C-v>", 'keys' : ['(', ')'] },
-                \       { 'block' : ['[', ']'], 'mode' : "vV\<C-v>", 'keys' : ['[', ']'] },
-                \       { 'block' : ['{', '}'], 'mode' : "vV\<C-v>", 'keys' : ['{', '}'] },
-                \       { 'block' : ['<', '>'], 'mode' : "vV\<C-v>", 'keys' : ['<', '>'] },
-                \       { 'block' : ['"', '"'], 'mode' : "vV\<C-v>", 'keys' : ['"'] },
-                \       { 'block' : ["'", "'"], 'mode' : "vV\<C-v>", 'keys' : ["'"] },
-                \       { 'block' : ['`', '`'], 'mode' : "vV\<C-v>", 'keys' : ['`'] },
-                \       { 'block' : [' ', ' '], 'mode' : "vV\<C-v>", 'keys' : ["\<Space>"] },
+                \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
+                \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
+                \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
+                \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
+                \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
+                \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
+                \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
+                \       { 'block' : [' ', ' '], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["\<Space>"] },
                 \   ],
                 \ } )
+
+    delfunction s:merge
 endif
 
 
 function! s:block(input_char, motion)
     for b in g:operator#surround#blocks['-']
-        if index(b.keys, a:input_char) >= 0 && b.mode =~# a:motion
+        if index(b.keys, a:input_char) >= 0 && index(b.motionwise, a:motion) >= 0
             return b.block
         endif
     endfor
@@ -52,18 +54,6 @@ endfunction
 
 function! s:is_empty_region(begin, end)
   return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
-endfunction
-
-function! s:motion_abbrv(motion)
-    if a:motion ==# 'char'
-        return 'v'
-    elseif a:motion ==# 'line'
-        return 'V'
-    elseif a:motion ==# 'block'
-        return "\<C-v>"
-    else
-        throw "invalid motion wiseness"
-    endif
 endfunction
 
 function! s:append_block(block_pair)
@@ -88,7 +78,7 @@ function! operator#surround#append(motion)
     endif
 
     let char = s:getchar()
-    return s:append_block(s:block(char, s:motion_abbrv(a:motion)))
+    return s:append_block(s:block(char, a:motion))
 endfunction
 
 
