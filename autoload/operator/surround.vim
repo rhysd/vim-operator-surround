@@ -26,7 +26,6 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
                 \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
                 \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
                 \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
-                \       { 'block' : [' ', ' '], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["\<Space>"] },
                 \   ],
                 \ } )
 

@@ -66,4 +66,36 @@ describe '<Plug>(operator-surround-append)'
         Expect getline('.') ==# "hoge huga ([{<\"'`poyo`'\">}])"
         echon ' '
     end
+
+    it 'appends blocks to inner word which is head of line'
+        Line "hoge huga poyo"
+        normal! gg0
+        normal siw(l
+        Expect getline('.') ==# "(hoge) huga poyo"
+        normal siw[l
+        Expect getline('.') ==# "([hoge]) huga poyo"
+        normal siw{l
+        Expect getline('.') ==# "([{hoge}]) huga poyo"
+        normal siw<l
+        Expect getline('.') ==# "([{<hoge>}]) huga poyo"
+        normal siw"l
+        Expect getline('.') ==# "([{<\"hoge\">}]) huga poyo"
+        normal siw'l
+        Expect getline('.') ==# "([{<\"'hoge'\">}]) huga poyo"
+        normal siw`l
+        Expect getline('.') ==# "([{<\"'`hoge`'\">}]) huga poyo"
+        echon ' '
+    end
+
+    it 'echos an error message when input is invalid'
+        Line "hoge huga poyo"
+        normal! gg0w
+        Expect 'normal siw&' to_throw_exception
+        Expect 'normal viws&' to_throw_exception
+        try
+            Expect 'normal siw&' not to_move_cursor
+            Expect 'normal viws&' not to_move_cursor
+        catch
+        endtry
+    end
 end
