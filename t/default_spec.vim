@@ -47,5 +47,18 @@ describe 'Default settings'
             endfor
         endfor
     end
+
+    it 'provide functions to make operator'
+        Expect '*operator#surround#append' to_exist
+        Expect '*operator#surround#replace' to_exist
+        Expect '*operator#surround#delete' to_exist
+    end
+
+    it 'provide default <Plug> mappings'
+        Expect maparg('<Plug>(operator-surround-append)') not to_be_empty
+        Expect maparg('<Plug>(operator-surround-replace)') not to_be_empty
+        Expect maparg('<Plug>(operator-surround-delete)') not to_be_empty
+    end
+
 end
 
