@@ -56,29 +56,33 @@ function! s:is_empty_region(begin, end)
   return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
 endfunction
 
-function! s:append_block(block_pair)
+function! s:surround_characters(block_begin, block_end)
+    let pos = getpos('.')
+    execute 'silent' 'normal!' "`[v`]\<Esc>"
+    execute 'silent' 'normal!' printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_end, a:block_begin)
+    call setpos('.', pos)
+endfunction
+
+function! s:append_block(block_pair, motion)
     if type(a:block_pair) == type(0) && ! a:block_pair
         return
     endif
 
-    if s:is_empty_region(getpos("'["), getpos("']"))
-        return
+    if motion ==# 'char'
+        call s:surround_characters(a:block_pair[0], a:block_pair[1])
+    else
+        throw "Not implemented"
     endif
-
-    let pos = getpos('.')
-    execute 'silent' 'normal!' "`[v`]\<Esc>"
-    execute 'silent' 'normal!' printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_pair[1], a:block_pair[0])
-    call setpos('.', pos)
 endfunction
 
 
 function! operator#surround#append(motion)
-    if a:motion !=# 'char'
-        throw "Not implemented"
+    if s:is_empty_region(getpos("'["), getpos("']"))
+        return
     endif
 
     let char = s:getchar()
-    return s:append_block(s:block(char, a:motion))
+    return s:append_block(s:block(char, a:motion), a:motion)
 endfunction
 
 
