@@ -68,7 +68,7 @@ function! s:append_block(block_pair, motion)
         return
     endif
 
-    if motion ==# 'char'
+    if a:motion ==# 'char'
         call s:surround_characters(a:block_pair[0], a:block_pair[1])
     else
         throw "Not implemented"
