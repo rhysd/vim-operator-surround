@@ -35,7 +35,6 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
 endif
 
 
-" TODO rename
 function! s:get_block_or_prefix_match(input, motion)
     for b in g:operator#surround#blocks['-']
         if index(b.motionwise, a:motion) >= 0
@@ -81,10 +80,6 @@ function! s:surround_characters(block_begin, block_end)
 endfunction
 
 function! s:append_block(block_pair, motion)
-    if type(a:block_pair) == type(0) && ! a:block_pair
-        return
-    endif
-
     if a:motion ==# 'char'
         call s:surround_characters(a:block_pair[0], a:block_pair[1])
     else
