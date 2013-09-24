@@ -26,6 +26,8 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
                 \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
                 \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
                 \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
+                \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
+                \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
                 \   ],
                 \ } )
 
@@ -50,7 +52,7 @@ function! s:get_block_or_prefix_match(input, motion)
 endfunction
 
 function! s:get_block_from_input(motion)
-    " echon 'block : '
+    echon 'block : '
     let input = ''
     while 1
         let char = getchar()
