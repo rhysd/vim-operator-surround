@@ -45,6 +45,10 @@ describe '<Plug>(operator-surround-append)'
         Expect getline('.') ==# "hoge ([{<\"'huga'\">}]) poyo"
         normal siw`l
         Expect getline('.') ==# "hoge ([{<\"'`huga`'\">}]) poyo"
+        normal siw )ll
+        Expect getline('.') ==# "hoge ([{<\"'`( huga )`'\">}]) poyo"
+        normal siw }ll
+        Expect getline('.') ==# "hoge ([{<\"'`( { huga } )`'\">}]) poyo"
         echon ' '
     end
 
