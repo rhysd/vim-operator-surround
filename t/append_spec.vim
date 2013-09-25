@@ -27,6 +27,18 @@ describe '<Plug>(operator-surround-append)'
         unmap s
     end
 
+    it 'echos an error message when input is invalid.'
+        Line "hoge huga poyo"
+        normal! gg0w
+        Expect 'normal siw&' to_throw_exception
+        Expect 'normal viws&' to_throw_exception
+        try
+            Expect 'normal siw&' not to_move_cursor
+            Expect 'normal viws&' not to_move_cursor
+        catch
+        endtry
+    end
+
     " a characterwise {{{
     it 'appends blocks to a characterwise object with an operator mapping.'
         Line "hoge huga poyo"
@@ -90,18 +102,6 @@ describe '<Plug>(operator-surround-append)'
         normal siw`l
         Expect getline('.') ==# "([{<\"'`hoge`'\">}]) huga poyo"
         echon ' '
-    end
-
-    it 'echos an error message when input is invalid.'
-        Line "hoge huga poyo"
-        normal! gg0w
-        Expect 'normal siw&' to_throw_exception
-        Expect 'normal viws&' to_throw_exception
-        try
-            Expect 'normal siw&' not to_move_cursor
-            Expect 'normal viws&' not to_move_cursor
-        catch
-        endtry
     end
     " }}}
 
