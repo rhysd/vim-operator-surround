@@ -174,7 +174,39 @@ describe '<Plug>(operator-surround-append)'
     " }}}
 
     " blockwise {{{
-    " TODO not implemented yet
+    it 'appends blocks to a blockwise object with an visual mode mapping.'
+        1Line "hoge huga poyo"
+        2Line "hoge huga poyo"
+        execute 'normal' "gg0w\<C-v>jt\<Space>s("
+        Expect getline(1) ==# "hoge (huga) poyo"
+        Expect getline(2) ==# "hoge (huga) poyo"
+
+        execute 'normal' "gg0w\<C-v>jt\<Space>s{"
+        Expect getline(1) ==# "hoge {(huga)} poyo"
+        Expect getline(2) ==# "hoge {(huga)} poyo"
+
+        execute 'normal' "gg0w\<C-v>jt\<Space>s["
+        Expect getline(1) ==# "hoge [{(huga)}] poyo"
+        Expect getline(2) ==# "hoge [{(huga)}] poyo"
+
+        execute 'normal' "gg0w\<C-v>jt\<Space>s\""
+        Expect getline(1) ==# "hoge \"[{(huga)}]\" poyo"
+        Expect getline(2) ==# "hoge \"[{(huga)}]\" poyo"
+
+        execute 'normal' "gg0w\<C-v>jt\<Space>s'"
+        Expect getline(1) ==# "hoge '\"[{(huga)}]\"' poyo"
+        Expect getline(2) ==# "hoge '\"[{(huga)}]\"' poyo"
+
+        execute 'normal' "gg0w\<C-v>jt\<Space>s<"
+        Expect getline(1) ==# "hoge <'\"[{(huga)}]\"'> poyo"
+        Expect getline(2) ==# "hoge <'\"[{(huga)}]\"'> poyo"
+
+        execute 'normal' "gg0w\<C-v>jt\<Space>s\<Space>)"
+        Expect getline(1) ==# "hoge ( <'\"[{(huga)}]\"'> ) poyo"
+        Expect getline(2) ==# "hoge ( <'\"[{(huga)}]\"'> ) poyo"
+
+        echon ' '
+    end
     " }}}
 
 end
