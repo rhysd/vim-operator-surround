@@ -86,34 +86,35 @@ function! s:echomsg(message, ...)
 endfunction
 
 function! s:surround_characters(block_begin, block_end)
-    let pos = getpos('.')
     call s:normal("`[v`]\<Esc>")
     call s:normal(printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_end, a:block_begin))
-    call setpos('.', pos)
 endfunction
 
 function! s:surround_lines(block_begin, block_end)
-    let pos = getpos('.')
     call s:normal( printf("%dgg$a%s\<Esc>%dgg0i%s\<Esc>",
                          \ getpos("']")[1],
                          \ a:block_end,
                          \ getpos("'[")[1],
                          \ a:block_begin)
                  \ )
-    call setpos('.', pos)
 endfunction
 
 function! s:surround_blocks(block_begin, block_end)
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, end_line, end_col, _] = getpos("']")
-    let pos = getpos('.')
     for line in range(start_line, end_line)
-        call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>", line, end_col, a:block_end, start_col, a:block_begin))
+        call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
+                    \        line,
+                    \        end_col,
+                    \        a:block_end,
+                    \        start_col,
+                    \        a:block_begin)
+                    \ )
     endfor
-    call setpos('.', pos)
 endfunction
 
 function! s:append_block(block_pair, motion)
+    let pos = getpos('.')
     if a:motion ==# 'char'
         call s:surround_characters(a:block_pair[0], a:block_pair[1])
     elseif a:motion ==# 'line'
@@ -124,6 +125,7 @@ function! s:append_block(block_pair, motion)
         " never reached here
         throw "Invalid motion"
     endif
+    call setpos('.', pos)
 endfunction
 
 
