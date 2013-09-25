@@ -10,13 +10,12 @@ function! s:line(str, line)
     if a:line == 0
         call setline(1, a:str)
     else
-        call setline(a:1, a:str)
+        call setline(a:line, a:str)
     endif
 endfunction
 
 command! -nargs=+ -count=0 Line call <SID>line(<args>, <count>)
 
-" characterwise {{{
 describe '<Plug>(operator-surround-append)'
     before
         map s <Plug>(operator-surround-append)
@@ -28,7 +27,8 @@ describe '<Plug>(operator-surround-append)'
         unmap s
     end
 
-    it 'appends blocks to inner word with an operator mapping'
+    " a characterwise {{{
+    it 'appends blocks to a characterwise object with an operator mapping.'
         Line "hoge huga poyo"
         normal! gg0w
         normal siw(l
@@ -52,7 +52,7 @@ describe '<Plug>(operator-surround-append)'
         echon ' '
     end
 
-    it 'appends blocks to inner word with visual mode mapping'
+    it 'appends blocks to a characterwise object with visual mode mapping.'
         Line "hoge huga poyo"
         normal! gg0ww
         normal viws(l
@@ -72,7 +72,7 @@ describe '<Plug>(operator-surround-append)'
         echon ' '
     end
 
-    it 'appends blocks to inner word which is head of line'
+    it 'appends blocks to a characterwise object which is head of line.'
         Line "hoge huga poyo"
         normal! gg0
         normal siw(l
@@ -92,7 +92,7 @@ describe '<Plug>(operator-surround-append)'
         echon ' '
     end
 
-    it 'echos an error message when input is invalid'
+    it 'echos an error message when input is invalid.'
         Line "hoge huga poyo"
         normal! gg0w
         Expect 'normal siw&' to_throw_exception
@@ -103,13 +103,79 @@ describe '<Plug>(operator-surround-append)'
         catch
         endtry
     end
+    " }}}
+
+    " linewise {{{
+    it 'appends blocks to linewise object with an operator mapping.'
+        1Line "hoge huga poyo"
+        2Line "hoge huga poyo"
+        normal! gg0
+
+        normal sip(
+        Expect getline(1).getline(2) =~# '^(.\+)$'
+
+        normal sip{
+        Expect getline(1).getline(2) =~# '^{(.\+)}$'
+
+        normal sip[
+        Expect getline(1).getline(2) =~# '^\[{(.\+)}]$'
+
+        normal sip<
+        Expect getline(1).getline(2) =~# '^<\[{(.\+)}]>$'
+
+        normal sip"
+        Expect getline(1).getline(2) =~# '^"<\[{(.\+)}]>"$'
+
+        normal sip'
+        Expect getline(1).getline(2) =~# '^''"<\[{(.\+)}]>"''$'
+
+        normal sip`
+        Expect getline(1).getline(2) =~# '^`''"<\[{(.\+)}]>"''`$'
+
+        normal sip )
+        Expect getline(1).getline(2) =~# '^( `''"<\[{(.\+)}]>"''` )$'
+
+        normal sip }
+        Expect getline(1).getline(2) =~# '^{ ( `''"<\[{(.\+)}]>"''` ) }$'
+    end
+
+    it 'appends blocks to linewise object with an visual mode mapping.'
+        1Line "hoge huga poyo"
+        2Line "hoge huga poyo"
+        normal! gg0
+
+        normal vips(
+        Expect getline(1).getline(2) =~# '^(.\+)$'
+
+        normal vips{
+        Expect getline(1).getline(2) =~# '^{(.\+)}$'
+
+        normal vips[
+        Expect getline(1).getline(2) =~# '^\[{(.\+)}]$'
+
+        normal vips<
+        Expect getline(1).getline(2) =~# '^<\[{(.\+)}]>$'
+
+        normal vips"
+        Expect getline(1).getline(2) =~# '^"<\[{(.\+)}]>"$'
+
+        normal vips'
+        Expect getline(1).getline(2) =~# '^''"<\[{(.\+)}]>"''$'
+
+        normal vips`
+        Expect getline(1).getline(2) =~# '^`''"<\[{(.\+)}]>"''`$'
+
+        normal vips )
+        Expect getline(1).getline(2) =~# '^( `''"<\[{(.\+)}]>"''` )$'
+
+        normal vips }
+        Expect getline(1).getline(2) =~# '^{ ( `''"<\[{(.\+)}]>"''` ) }$'
+    end
+    " }}}
+
+    " blockwise {{{
+    " TODO not implemented yet
+    " }}}
+
 end
-" }}}
 
-" linewise {{{
-" TODO not implemented yet
-" }}}
-
-" blockwise {{{
-" TODO not implemented yet
-" }}}
