@@ -79,9 +79,19 @@ function! s:surround_characters(block_begin, block_end)
     call setpos('.', pos)
 endfunction
 
+function! s:surround_lines(block_begin, block_end)
+    let pos = getpos('.')
+    let start_line = getpos("'[")[1]
+    let end_line = getpos("']")[1]
+    execute 'silent' 'normal!' printf("%dgg$a%s\<Esc>%dgg0i%s\<Esc>", end_line, a:block_end, start_line, a:block_begin)
+    call setpos('.', pos)
+endfunction
+
 function! s:append_block(block_pair, motion)
     if a:motion ==# 'char'
         call s:surround_characters(a:block_pair[0], a:block_pair[1])
+    elseif a:motion ==# 'line'
+        call s:surround_lines(a:block_pair[0], a:block_pair[1])
     else
         throw "Not implemented"
     endif
