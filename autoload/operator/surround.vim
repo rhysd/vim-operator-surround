@@ -3,6 +3,8 @@ if exists('g:autoloaded_operator_surround')
 endif
 let g:autoloaded_operator_surround = 1
 
+let g:operator#surround#blocks = get(g:, 'operator#surround#blocks', {})
+
 if ! get(g:, 'operator#surround#no_default_blocks', 0)
 
     function! s:merge(d1, d2)
@@ -15,7 +17,6 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
         endfor
     endfunction
 
-    let g:operator#surround#blocks = get(g:, 'operator#surround#blocks', {})
     call s:merge( g:operator#surround#blocks,
                 \ {
                 \   '-' : [
