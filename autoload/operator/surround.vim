@@ -153,11 +153,36 @@ endfunction
 
 " delete {{{
 
+
+
 function! s:delete_block(block, motion)
-    
+    let pos = getpos('.')
+    if a:motion ==# 'char'
+        call s:delete_char_surround(a:block_pair[0], a:block_pair[1])
+    elseif a:motion ==# 'line'
+        call s:delete_line_surround(a:block_pair[0], a:block_pair[1])
+    elseif a:motion ==# 'block'
+        call s:delete_block_surround(a:block_pair[0], a:block_pair[1])
+    else
+        " never reached here
+        throw "Invalid motion"
+    endif
+    call setpos('.', pos)
 endfunction
 
 function! operator#surround#delete(motion)
+    if s:is_empty_region(getpos("'["), getpos("']"))
+        return
+    endif
+
+    let block = s:get_block_from_input(a:motion)
+    if type(block) == type(0) && ! block
+        return
+    endif
+
+    return s:delete_block(block, a:motion)
+endfunction
+" }}}
 
 
 " replace {{{
