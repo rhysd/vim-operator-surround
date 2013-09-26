@@ -3,15 +3,15 @@ Operator to Surround a Text Object [![Build Status](https://travis-ci.org/rhysd/
 
 This plugin provides operator mappings to surround a text object with `()`, `""` and so on.
 
-- `<Plug>(vim-operator-surround-append)`
+- `<Plug>(operator-surround-append)`
 
 ![Screen shot](http://gifzo.net/BV5L18BxT86.gif)
 
-- `<Plug>(vim-operator-surround-replace)`
+- `<Plug>(operator-surround-replace)`
 
 Not implemented yet.
 
-- `<Plug>(vim-operator-surround-delete)`
+- `<Plug>(operator-surround-delete)`
 
 Not implemented yet.
 
