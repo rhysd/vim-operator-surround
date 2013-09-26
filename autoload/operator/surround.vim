@@ -3,6 +3,10 @@ if exists('g:autoloaded_operator_surround')
 endif
 let g:autoloaded_operator_surround = 1
 
+let s:save_cpo = &cpo
+set cpo&vim
+
+" customization {{{
 let g:operator#surround#blocks = get(g:, 'operator#surround#blocks', {})
 
 if ! get(g:, 'operator#surround#no_default_blocks', 0)
@@ -34,8 +38,9 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
 
     delfunction s:merge
 endif
+" }}}
 
-
+" input {{{
 function! s:get_block_or_prefix_match(input, motion)
     for b in g:operator#surround#blocks['-']
         if index(b.motionwise, a:motion) >= 0
@@ -67,7 +72,9 @@ function! s:get_block_from_input(motion)
         unlet result
     endwhile
 endfunction
+" }}}
 
+" helpers {{{
 function! s:is_empty_region(begin, end)
   return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
 endfunction
@@ -77,15 +84,14 @@ function! s:normal(cmd)
 endfunction
 
 function! s:echomsg(message, ...)
-    if a:0 == 1
-        execute 'echohl' a:1
-    endif
+    if a:0 == 1 | execute 'echohl' a:1 | endif
     echomsg string(a:message)
-    if a:0 == 1
-        echohl None
-    endif
+    if a:0 == 1 | echohl None | endif
 endfunction
+" }}}
 
+
+" append {{{
 function! s:surround_characters(block_begin, block_end)
     call s:normal("`[v`]\<Esc>")
     call s:normal(printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_end, a:block_begin))
@@ -142,13 +148,23 @@ function! operator#surround#append(motion)
 
     return s:append_block(block, a:motion)
 endfunction
+" }}}
 
 
+" delete {{{
+
+function! s:delete_block(block, motion)
+    
+endfunction
+
+function! operator#surround#delete(motion)
+
+
+" replace {{{
 function! operator#surround#replace(motion)
     throw "Not implemented"
 endfunction
+" }}}
 
-
-function! operator#surround#delete(motion)
-    throw "Not implemented"
-endfunction
+let &cpo = s:save_cpo
+unlet s:save_cpo
