@@ -39,7 +39,7 @@ describe '<Plug>(operator-surround-append)'
         endtry
     end
 
-    " a characterwise {{{
+    " characterwise {{{
     it 'appends blocks to a characterwise object with an operator mapping.'
         Line "hoge huga poyo"
         normal! gg0w
