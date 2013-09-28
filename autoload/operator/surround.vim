@@ -167,7 +167,7 @@ endfunction
 " delete {{{
 function! s:get_surround_in(region)
     for b in g:operator#surround#blocks['-']
-        if match(a:region, '^\V\s\*'.b.block[0].'\.\*'.b.block[1].'\s\*\$') >= 0
+        if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
             return b.block
         endif
     endfor
@@ -182,6 +182,8 @@ function! s:delete_surround(visual)
         call s:normal('`['.a:visual.'`]"gy')
         let region = getreg('g')
 
+        echomsg string(region)
+
         let block = s:get_surround_in(region)
         if block == []
             throw 'vim-operator-surround'
@@ -189,8 +191,8 @@ function! s:delete_surround(visual)
 
         call s:normal('`['.a:visual.'`]"_d')
 
-        let after = substitute(region, '^\s*\zs\V'.block[0], '', '')
-        let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
+        let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
+        let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.s:get_paste_command())
