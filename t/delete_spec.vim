@@ -27,6 +27,19 @@ describe '<Plug>(operator-surround-delete)'
         unmap s
     end
 
+    " error handling {{{
+    it 'echos an error when no block is found in the object'
+        Line 'hoge huga poyo'
+        Expect 'normal gg0wsiw' to_throw_exception
+        Expect 'normal gg0wviws' to_throw_exception
+        try
+            Expect 'normal gg0wsiw' not to_move_cursor
+            Expect 'normal gg0wviws' not to_move_cursor
+        catch
+        endtry
+    end
+    " }}}
+
     " characterwise {{{
     it 'deletes blocks in a characterwise object with an operator mapping'
         Line "hoge \"'[<({huga})>]'\" piyo"
