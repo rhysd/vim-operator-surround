@@ -153,34 +153,52 @@ endfunction
 
 " delete {{{
 
-
-
-function! s:delete_block(block, motion)
-    let pos = getpos('.')
-    if a:motion ==# 'char'
-        call s:delete_char_surround(a:block_pair[0], a:block_pair[1])
-    elseif a:motion ==# 'line'
-        call s:delete_line_surround(a:block_pair[0], a:block_pair[1])
-    elseif a:motion ==# 'block'
-        call s:delete_block_surround(a:block_pair[0], a:block_pair[1])
-    else
-        " never reached here
-        throw "Invalid motion"
-    endif
-    call setpos('.', pos)
+function! s:get_surround_in(region)
+    for b in g:operator#surround#blocks['-']
+        if match(a:region, '^\V\s\*'.b.block[0].'\.\*'.b.block[1].'\s\*\$') >= 0
+            return b.block
+        endif
+    endfor
+    return []
 endfunction
+
+function! s:delete_char_surround()
+    let save_reg_g = getreg('g')
+    let save_regtype_g = getregtype('g')
+    try
+        call setreg('g', '', 'v')
+        call s:normal('`[v`]"gd')
+        let region = getreg('g')
+
+        let block = s:get_surround_in(region)
+        if block == [] | return | endif
+        let after = substitute(region, '^\V\s\*\zs'.block[0], '', '')
+        let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
+
+        call setreg('g', after)
+        call s:normal('"gp')
+    finally
+        call setreg('g', save_reg_g, save_regtype_g)
+    endtry
+endfunction
+
 
 function! operator#surround#delete(motion)
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
     endif
-
-    let block = s:get_block_from_input(a:motion)
-    if type(block) == type(0) && ! block
-        return
+    let pos = getpos('.')
+    if a:motion ==# 'char'
+        call s:delete_char_surround()
+    elseif a:motion ==# 'line'
+        call s:delete_line_surround()
+    elseif a:motion ==# 'block'
+        call s:delete_block_surround()
+    else
+        " never reached here
+        throw "Invalid motion"
     endif
-
-    return s:delete_block(block, a:motion)
+    call setpos('.', pos)
 endfunction
 " }}}
 
