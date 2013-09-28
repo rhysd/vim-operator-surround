@@ -172,12 +172,12 @@ function! s:delete_char_surround()
 
         let block = s:get_surround_in(region)
         if block == [] | return | endif
-        let after = substitute(region, '^\V\s\*\zs'.block[0], '', '')
+
+        let after = substitute(region, '^\s*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
-        echomsg string(after)
 
         call setreg('g', after)
-        call s:normal('"gp')
+        call s:normal('"gP')
     finally
         call setreg('g', save_reg_g, save_regtype_g)
     endtry
