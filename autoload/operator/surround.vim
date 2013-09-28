@@ -122,17 +122,20 @@ endfunction
 
 function! s:append_block(block_pair, motion)
     let pos = getpos('.')
-    if a:motion ==# 'char'
-        call s:surround_characters(a:block_pair[0], a:block_pair[1])
-    elseif a:motion ==# 'line'
-        call s:surround_lines(a:block_pair[0], a:block_pair[1])
-    elseif a:motion ==# 'block'
-        call s:surround_blocks(a:block_pair[0], a:block_pair[1])
-    else
-        " never reached here
-        throw "Invalid motion"
-    endif
-    call setpos('.', pos)
+    try
+        if a:motion ==# 'char'
+            call s:surround_characters(a:block_pair[0], a:block_pair[1])
+        elseif a:motion ==# 'line'
+            call s:surround_lines(a:block_pair[0], a:block_pair[1])
+        elseif a:motion ==# 'block'
+            call s:surround_blocks(a:block_pair[0], a:block_pair[1])
+        else
+            " never reached here
+            throw "Invalid motion"
+        endif
+    finally
+        call setpos('.', pos)
+    endtry
 endfunction
 
 
@@ -161,12 +164,12 @@ function! s:get_surround_in(region)
     return []
 endfunction
 
-function! s:delete_char_surround()
+function! s:delete_surround(visual)
     let save_reg_g = getreg('g')
     let save_regtype_g = getregtype('g')
     try
-        call setreg('g', '', 'v')
-        call s:normal('`[v`]"gy')
+        call setreg('g', '', a:visual)
+        call s:normal('`['.a:visual.'`]"gy')
         let region = getreg('g')
 
         let block = s:get_surround_in(region)
@@ -174,12 +177,12 @@ function! s:delete_char_surround()
             throw 'vim-operator-surround'
         endif
 
-        call s:normal('`[v`]"_d')
+        call s:normal('`['.a:visual.'`]"_d')
 
         let after = substitute(region, '^\s*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
 
-        call setreg('g', after)
+        call setreg('g', after, a:visual)
         call s:normal('"gP')
     catch /vim-operator-surround/
         echoerr 'no block matches to the region'
@@ -193,18 +196,22 @@ function! operator#surround#delete(motion)
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
     endif
+
     let pos = getpos('.')
-    if a:motion ==# 'char'
-        call s:delete_char_surround()
-    elseif a:motion ==# 'line'
-        call s:delete_line_surround()
-    elseif a:motion ==# 'block'
-        call s:delete_block_surround()
-    else
-        " never reached here
-        throw "Invalid motion"
-    endif
-    call setpos('.', pos)
+    try
+        if a:motion ==# 'char'
+            call s:delete_surround('v')
+        elseif a:motion ==# 'line'
+            call s:delete_surround('V')
+        elseif a:motion ==# 'block'
+            throw "Not implemented"
+        else
+            " never reached here
+            throw "Invalid motion"
+        endif
+    finally
+        call setpos('.', pos)
+    endtry
 endfunction
 " }}}
 
