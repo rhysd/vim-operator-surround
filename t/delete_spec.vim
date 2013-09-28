@@ -43,7 +43,7 @@ describe '<Plug>(operator-surround-delete)'
     it 'deletes a block in the object at the end of line'
         Line 'hoge huga(poyo)'
         normal gg03wsa(
-        Expect getline('.') ==# 'hoge hugapoyo'
+        Expect 'hoge hugapoyo' to_be_current_line
     end
     " }}}
 

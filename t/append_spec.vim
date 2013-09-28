@@ -46,23 +46,23 @@ describe '<Plug>(operator-surround-append)'
         Line "hoge huga poyo"
         normal! gg0w
         normal siw(l
-        Expect getline('.') ==# "hoge (huga) poyo"
+        Expect "hoge (huga) poyo" to_be_current_line
         normal siw[l
-        Expect getline('.') ==# "hoge ([huga]) poyo"
+        Expect "hoge ([huga]) poyo" to_be_current_line
         normal siw{l
-        Expect getline('.') ==# "hoge ([{huga}]) poyo"
+        Expect "hoge ([{huga}]) poyo" to_be_current_line
         normal siw<l
-        Expect getline('.') ==# "hoge ([{<huga>}]) poyo"
+        Expect "hoge ([{<huga>}]) poyo" to_be_current_line
         normal siw"l
-        Expect getline('.') ==# "hoge ([{<\"huga\">}]) poyo"
+        Expect "hoge ([{<\"huga\">}]) poyo" to_be_current_line
         normal siw'l
-        Expect getline('.') ==# "hoge ([{<\"'huga'\">}]) poyo"
+        Expect "hoge ([{<\"'huga'\">}]) poyo" to_be_current_line
         normal siw`l
-        Expect getline('.') ==# "hoge ([{<\"'`huga`'\">}]) poyo"
+        Expect "hoge ([{<\"'`huga`'\">}]) poyo" to_be_current_line
         normal siw )ll
-        Expect getline('.') ==# "hoge ([{<\"'`( huga )`'\">}]) poyo"
+        Expect "hoge ([{<\"'`( huga )`'\">}]) poyo" to_be_current_line
         normal siw }ll
-        Expect getline('.') ==# "hoge ([{<\"'`( { huga } )`'\">}]) poyo"
+        Expect "hoge ([{<\"'`( { huga } )`'\">}]) poyo" to_be_current_line
         echon ' '
     end
 
@@ -70,19 +70,19 @@ describe '<Plug>(operator-surround-append)'
         Line "hoge huga poyo"
         normal! gg0ww
         normal viws(l
-        Expect getline('.') ==# "hoge huga (poyo)"
+        Expect "hoge huga (poyo)" to_be_current_line
         normal viws[l
-        Expect getline('.') ==# "hoge huga ([poyo])"
+        Expect "hoge huga ([poyo])" to_be_current_line
         normal viws{l
-        Expect getline('.') ==# "hoge huga ([{poyo}])"
+        Expect "hoge huga ([{poyo}])" to_be_current_line
         normal viws<l
-        Expect getline('.') ==# "hoge huga ([{<poyo>}])"
+        Expect "hoge huga ([{<poyo>}])" to_be_current_line
         normal viws"l
-        Expect getline('.') ==# "hoge huga ([{<\"poyo\">}])"
+        Expect "hoge huga ([{<\"poyo\">}])" to_be_current_line
         normal viws'l
-        Expect getline('.') ==# "hoge huga ([{<\"'poyo'\">}])"
+        Expect "hoge huga ([{<\"'poyo'\">}])" to_be_current_line
         normal viws`l
-        Expect getline('.') ==# "hoge huga ([{<\"'`poyo`'\">}])"
+        Expect "hoge huga ([{<\"'`poyo`'\">}])" to_be_current_line
         echon ' '
     end
 
@@ -90,19 +90,19 @@ describe '<Plug>(operator-surround-append)'
         Line "hoge huga poyo"
         normal! gg0
         normal siw(l
-        Expect getline('.') ==# "(hoge) huga poyo"
+        Expect "(hoge) huga poyo" to_be_current_line
         normal siw[l
-        Expect getline('.') ==# "([hoge]) huga poyo"
+        Expect "([hoge]) huga poyo" to_be_current_line
         normal siw{l
-        Expect getline('.') ==# "([{hoge}]) huga poyo"
+        Expect "([{hoge}]) huga poyo" to_be_current_line
         normal siw<l
-        Expect getline('.') ==# "([{<hoge>}]) huga poyo"
+        Expect "([{<hoge>}]) huga poyo" to_be_current_line
         normal siw"l
-        Expect getline('.') ==# "([{<\"hoge\">}]) huga poyo"
+        Expect "([{<\"hoge\">}]) huga poyo" to_be_current_line
         normal siw'l
-        Expect getline('.') ==# "([{<\"'hoge'\">}]) huga poyo"
+        Expect "([{<\"'hoge'\">}]) huga poyo" to_be_current_line
         normal siw`l
-        Expect getline('.') ==# "([{<\"'`hoge`'\">}]) huga poyo"
+        Expect "([{<\"'`hoge`'\">}]) huga poyo" to_be_current_line
         echon ' '
     end
     " }}}
@@ -125,7 +125,7 @@ describe '<Plug>(operator-surround-append)'
         normal sip<
         Expect getline(1).getline(2) =~# '^<\[{(.\+)}]>$'
 
-        normal sip"
+        normal sip" to_be_current_line
         Expect getline(1).getline(2) =~# '^"<\[{(.\+)}]>"$'
 
         normal sip'
@@ -158,7 +158,7 @@ describe '<Plug>(operator-surround-append)'
         normal vips<
         Expect getline(1).getline(2) =~# '^<\[{(.\+)}]>$'
 
-        normal vips"
+        normal vips" to_be_current_line
         Expect getline(1).getline(2) =~# '^"<\[{(.\+)}]>"$'
 
         normal vips'
