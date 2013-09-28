@@ -76,7 +76,7 @@ endfunction
 
 " helpers {{{
 function! s:is_empty_region(begin, end)
-  return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
+    return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
 endfunction
 
 function! s:normal(cmd)
@@ -87,6 +87,16 @@ function! s:echomsg(message, ...)
     if a:0 == 1 | execute 'echohl' a:1 | endif
     echomsg type(a:message) == type('') ? a:message : string(a:message)
     if a:0 == 1 | echohl None | endif
+endfunction
+
+function! s:get_paste_command()
+    let pos = getpos('.')
+    try
+        normal! $
+        return getpos('.') == pos ? 'p' : 'P'
+    finally
+        call setpos('.', pos)
+    endtry
 endfunction
 " }}}
 
@@ -183,7 +193,7 @@ function! s:delete_surround(visual)
         let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
 
         call setreg('g', after, a:visual)
-        call s:normal('"gP')
+        call s:normal('"g'.s:get_paste_command())
     catch /vim-operator-surround/
         echoerr 'no block matches to the region'
     finally
