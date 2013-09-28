@@ -38,6 +38,13 @@ describe '<Plug>(operator-surround-delete)'
         catch
         endtry
     end
+
+    " special case
+    it 'deletes a block in the object at the end of line'
+        Line 'hoge huga(poyo)'
+        normal gg03wsa(
+        Expect getline('.') ==# 'hoge hugapoyo'
+    end
     " }}}
 
     " characterwise {{{
