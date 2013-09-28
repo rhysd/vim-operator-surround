@@ -27,6 +27,7 @@ describe '<Plug>(operator-surround-append)'
         unmap s
     end
 
+    " error handling {{{
     it 'echos an error message when input is invalid.'
         Line "hoge huga poyo"
         normal! gg0w
@@ -38,6 +39,7 @@ describe '<Plug>(operator-surround-append)'
         catch
         endtry
     end
+    " }}}
 
     " characterwise {{{
     it 'appends blocks to a characterwise object with an operator mapping.'
