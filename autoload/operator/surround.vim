@@ -152,7 +152,6 @@ endfunction
 
 
 " delete {{{
-
 function! s:get_surround_in(region)
     for b in g:operator#surround#blocks['-']
         if match(a:region, '^\V\s\*'.b.block[0].'\.\*'.b.block[1].'\s\*\$') >= 0
@@ -167,17 +166,23 @@ function! s:delete_char_surround()
     let save_regtype_g = getregtype('g')
     try
         call setreg('g', '', 'v')
-        call s:normal('`[v`]"gd')
+        call s:normal('`[v`]"gy')
         let region = getreg('g')
 
         let block = s:get_surround_in(region)
-        if block == [] | return | endif
+        if block == []
+            throw 'vim-operator-surround'
+        endif
+
+        call s:normal('`[v`]"_d')
 
         let after = substitute(region, '^\s*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
 
         call setreg('g', after)
         call s:normal('"gP')
+    catch /vim-operator-surround/
+        echoerr 'no block matches to the region'
     finally
         call setreg('g', save_reg_g, save_regtype_g)
     endtry
