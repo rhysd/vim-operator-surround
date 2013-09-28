@@ -85,7 +85,7 @@ endfunction
 
 function! s:echomsg(message, ...)
     if a:0 == 1 | execute 'echohl' a:1 | endif
-    echomsg string(a:message)
+    echomsg type(a:message) == type('') ? a:message : string(a:message)
     if a:0 == 1 | echohl None | endif
 endfunction
 " }}}
@@ -174,6 +174,7 @@ function! s:delete_char_surround()
         if block == [] | return | endif
         let after = substitute(region, '^\V\s\*\zs'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\s\*\$', '', '')
+        echomsg string(after)
 
         call setreg('g', after)
         call s:normal('"gp')
