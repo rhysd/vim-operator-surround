@@ -36,7 +36,7 @@ describe 'filetype specific settings'
         unmap sd
     end
 
-    it 'reflect'
+    it 'are reflected'
         Line "hoge"
         normal gg0saiwdo
         Expect getline(1) ==# 'do'
