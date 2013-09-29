@@ -201,6 +201,20 @@ function! s:delete_surround(visual)
     endtry
 endfunction
 
+function! s:delete_surrounds_in_block()
+    let [_, start_line, start_col, _] = getpos("'[")
+    let [_, last_line, last_col, _] = getpos("']")
+    let save_reg_g = getreg('g')
+    let save_regtype_g = getregtype('g')
+    try
+        for line in range(start_line, last_line)
+            call s:normal(printf('%dgg%d|v%d|"gy', line, start_col, last_col))
+            call s:delete_surround('v')
+        endfor
+    finally
+        call setreg('g', save_reg_g, save_regtype_g)
+    endtry
+endfunction
 
 function! operator#surround#delete(motion)
     if s:is_empty_region(getpos("'["), getpos("']"))
@@ -214,7 +228,7 @@ function! operator#surround#delete(motion)
         elseif a:motion ==# 'line'
             call s:delete_surround('V')
         elseif a:motion ==# 'block'
-            throw "Not implemented"
+            call s:delete_surrounds_in_block()
         else
             " never reached here
             throw "Invalid motion"
