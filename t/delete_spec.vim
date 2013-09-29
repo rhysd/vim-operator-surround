@@ -86,7 +86,22 @@ describe '<Plug>(operator-surround-delete)'
     " }}}
 
     " blockwise {{{
-    " TODO not implemented
+    it 'deletes blocks in a blockwise object with an operator mapping'
+        1Line '(hoge)'
+        2Line '[huga]'
+        3Line '<piyo>'
+        4Line '"hoge"'
+        5Line '{huga}'
+        6Line "'piyo'"
+        execute "normal! gg\<C-v>Gf'"
+        normal s
+        Expect getline(1) ==# 'hoge'
+        Expect getline(2) ==# 'huga'
+        Expect getline(3) ==# 'piyo'
+        Expect getline(4) ==# 'hoge'
+        Expect getline(5) ==# 'huga'
+        Expect getline(6) ==# 'piyo'
+    end
     " }}}
 
 end
