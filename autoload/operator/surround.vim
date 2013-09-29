@@ -41,8 +41,8 @@ endif
 " }}}
 
 " input {{{
-function! s:get_block_or_prefix_match(input, motion)
-    for b in g:operator#surround#blocks['-']
+function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
+    for b in g:operator#surround#blocks[a:filetype]
         if index(b.motionwise, a:motion) >= 0
             if index(b.keys, a:input) >= 0
                 " completely matched
@@ -54,6 +54,22 @@ function! s:get_block_or_prefix_match(input, motion)
         endif
     endfor
     return 0
+endfunction
+
+function! s:get_block_or_prefix_match(input, motion)
+    if has_key(g:operator#surround#blocks, &filetype)
+        let result = s:get_block_or_prefix_match_in_filetype(&filetype, a:input, a:motion)
+        if type(result) == type([]) || result
+            return result
+        endif
+    endif
+
+    " '-' has the lowest priority
+    if has_key(g:operator#surround#blocks, '-')
+        return s:get_block_or_prefix_match_in_filetype('-', a:input, a:motion)
+    else
+        return 0
+    endif
 endfunction
 
 function! s:get_block_from_input(motion)
@@ -165,13 +181,28 @@ endfunction
 
 
 " delete {{{
-function! s:get_surround_in(region)
+function! s:get_surround_in_filetype_in(filetype, region)
     for b in g:operator#surround#blocks['-']
         if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
             return b.block
         endif
     endfor
     return []
+endfunction
+
+function! s:get_surround_in(region)
+    for filetype in keys(g:operator#surround#blocks)
+    if has_key(g:operator#surround#blocks, &filetype)
+        let result = s:get_surround_in_filetype_in(&filetype, a:region)
+        if result != [] | return result | endif
+    endfor
+
+    " '-' has the lowest priority
+    if has_key(g:operator#surround#blocks, '-')
+        return s:get_surround_in_filetype_in('-', a:region)
+    else
+        return []
+    endif
 endfunction
 
 function! s:delete_surround(visual)
