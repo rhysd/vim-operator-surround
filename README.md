@@ -19,8 +19,13 @@ Not implemented yet.
 ### Why don't you use vim-surround?
 
 [vim-surround]() is very useful and used by many vimmers.  However, I think its behavior is too complex for me.  Mappings which vim-surround provides are not arranged and hard to customize.
-I think all process should be done by operator mappings and appended blocks should be highly customizable with each motionwise objects.
+I think all process should be done by operator mappings and surrounds should be highly customizable with each motionwise objects.
 
+
+### Policy of This Plugin
+
+- **Simplicity** : All should be done with operator mappings.
+- **Extensibility** : The behavior should be highly customizable with `g:operator#surround#blocks` and text objects like [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
 
 ### Customize
 
