@@ -93,7 +93,7 @@ describe '<Plug>(operator-surround-delete)'
         4Line '"hoge"'
         5Line '{huga}'
         6Line "'piyo'"
-        execute "normal! gg\<C-v>Gf'"
+        execute "normal! gg\<C-v>G$"
         normal s
         Expect getline(1) ==# 'hoge'
         Expect getline(2) ==# 'huga'
@@ -101,6 +101,17 @@ describe '<Plug>(operator-surround-delete)'
         Expect getline(4) ==# 'hoge'
         Expect getline(5) ==# 'huga'
         Expect getline(6) ==# 'piyo'
+    end
+
+    it 'deletes blocks in a blockwise object when it includes the line which is shorter than the object'
+        1Line '(hogeee)'
+        2Line '[huga]'
+        3Line '<piyopoyo>'
+        execute "normal! gg\<C-v>G$"
+        normal s
+        Expect getline(1) ==# 'hogeee'
+        Expect getline(2) ==# 'huga'
+        Expect getline(3) ==# 'piyopoyo'
     end
     " }}}
 
