@@ -148,6 +148,8 @@ endfunction
 
 function! s:append_block(block_pair, motion)
     let pos = getpos('.')
+    let autoindent_save = &autoindent
+    set noautoindent
     try
         if a:motion ==# 'char'
             call s:surround_characters(a:block_pair[0], a:block_pair[1])
@@ -161,6 +163,7 @@ function! s:append_block(block_pair, motion)
         endif
     finally
         call setpos('.', pos)
+        let &autoindent = autoindent_save
     endtry
 endfunction
 
