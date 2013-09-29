@@ -68,20 +68,21 @@ describe '<Plug>(operator-surround-delete)'
 
     " linewise {{{
     it 'deletes blocks in a linewise object with an operator mapping'
-        1Line "\"'[<({huga huga "
-        2Line "piyo})>]'\""
-        normal ggsip
-        Expect getline(1).getline(2) ==# "'[<({huga huga piyo})>]'"
-        normal ggsip
-        Expect getline(1).getline(2) ==# "[<({huga huga piyo})>]"
-        normal ggsip
-        Expect getline(1).getline(2) ==# "<({huga huga piyo})>"
-        normal ggsip
-        Expect getline(1).getline(2) ==# "({huga huga piyo})"
-        normal ggsip
-        Expect getline(1).getline(2) ==# "{huga huga piyo}"
-        normal ggsip
-        Expect getline(1).getline(2) ==# "huga huga piyo"
+        1Line ''
+        2Line "\"'[<({huga huga "
+        3Line "piyo})>]'\""
+        normal 2ggsip
+        Expect getline(2).getline(3) ==# "'[<({huga huga piyo})>]'"
+        normal 2ggsip
+        Expect getline(2).getline(3) ==# "[<({huga huga piyo})>]"
+        normal 2ggsip
+        Expect getline(2).getline(3) ==# "<({huga huga piyo})>"
+        normal 2ggsip
+        Expect getline(2).getline(3) ==# "({huga huga piyo})"
+        normal 2ggsip
+        Expect getline(2).getline(3) ==# "{huga huga piyo}"
+        normal 2ggsip
+        Expect getline(2).getline(3) ==# "huga huga piyo"
     end
     " }}}
 

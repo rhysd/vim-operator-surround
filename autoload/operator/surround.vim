@@ -105,17 +105,21 @@ function! s:echomsg(message, ...)
     if a:0 == 1 | echohl None | endif
 endfunction
 
-function! s:get_paste_command()
-    let pos = getpos('.')
-    try
-        normal! $
-        return getpos('.') == pos ? 'p' : 'P'
-    finally
-        call setpos('.', pos)
-    endtry
+function! s:get_paste_command(visual, motion_end_pos, motion_end_last_col)
+  let [motion_end_line, motion_end_col] = a:motion_end_pos
+
+  if a:visual ==# 'v'
+    return ((a:motion_end_last_col == motion_end_col)
+          \ || (line('$') == motion_end_line
+          \     && len(getline('$')) <= motion_end_col))
+          \ ? 'p' : 'P'
+  elseif a:visual ==# 'V'
+    return line('$') == motion_end_line ? 'p' : 'P'
+  else
+    return 'P'
+  endif
 endfunction
 " }}}
-
 
 " append {{{
 function! s:surround_characters(block_begin, block_end)
@@ -182,7 +186,6 @@ function! operator#surround#append(motion)
 endfunction
 " }}}
 
-
 " delete {{{
 function! s:get_surround_in_filetype_in(filetype, region)
     for b in g:operator#surround#blocks['-']
@@ -212,7 +215,7 @@ function! s:delete_surround(visual)
     let save_reg_g = getreg('g')
     let save_regtype_g = getregtype('g')
     try
-        call setreg('g', '', 'v')
+        call setreg('g', '', a:visual)
         call s:normal('`['.a:visual.'`]"gy')
         let region = getreg('g')
 
@@ -221,13 +224,15 @@ function! s:delete_surround(visual)
             throw 'vim-operator-surround'
         endif
 
+        let put_command = s:get_paste_command(a:visual, getpos("']")[1:2], len(getline("']")))
+
         call s:normal('`['.a:visual.'`]"_d')
 
         let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
 
-        call setreg('g', after, 'v')
-        call s:normal('"g'.s:get_paste_command())
+        call setreg('g', after, a:visual)
+        call s:normal('"g'.put_command)
     catch /vim-operator-surround/
         echoerr 'no block matches to the region'
     finally
@@ -275,7 +280,6 @@ function! operator#surround#delete(motion)
     endtry
 endfunction
 " }}}
-
 
 " replace {{{
 function! operator#surround#replace(motion)
