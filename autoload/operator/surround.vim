@@ -105,19 +105,26 @@ function! s:echomsg(message, ...)
     if a:0 == 1 | echohl None | endif
 endfunction
 
-function! s:get_paste_command(visual, motion_end_pos, motion_end_last_col)
-  let [motion_end_line, motion_end_col] = a:motion_end_pos
+function! s:get_paste_command(visual, region, motion_end_last_col)
+    let [motion_end_line, motion_end_col] = a:region[1]
+    let start_line = a:region[0][0]
 
-  if a:visual ==# 'v'
-    return ((a:motion_end_last_col == motion_end_col)
-          \ || (line('$') == motion_end_line
-          \     && len(getline('$')) <= motion_end_col))
-          \ ? 'p' : 'P'
-  elseif a:visual ==# 'V'
-    return line('$') == motion_end_line ? 'p' : 'P'
-  else
-    return 'P'
-  endif
+    if a:visual ==# 'v'
+        return ((a:motion_end_last_col == motion_end_col)
+                    \ || (line('$') == motion_end_line
+                    \     && len(getline('$')) <= motion_end_col))
+                    \ ? 'p' : 'P'
+    elseif a:visual ==# 'V'
+        if start_line == 1 && motion_end_line == line('$')
+            " p and P can't insert linewise object in this case
+            " because 1 line remains definitely and the line remains
+            " after pasting.
+            throw "Unimplemented"
+        endif
+        return line('$') == motion_end_line ? 'p' : 'P'
+    else
+        return 'P'
+    endif
 endfunction
 " }}}
 
@@ -215,7 +222,7 @@ function! s:delete_surround(visual)
     let save_reg_g = getreg('g')
     let save_regtype_g = getregtype('g')
     try
-        call setreg('g', '', a:visual)
+        call setreg('g', '', 'v')
         call s:normal('`['.a:visual.'`]"gy')
         let region = getreg('g')
 
@@ -224,7 +231,7 @@ function! s:delete_surround(visual)
             throw 'vim-operator-surround'
         endif
 
-        let put_command = s:get_paste_command(a:visual, getpos("']")[1:2], len(getline("']")))
+        let put_command = s:get_paste_command(a:visual, [getpos("'[")[1:2], getpos("']")[1:2]], len(getline("']")))
 
         call s:normal('`['.a:visual.'`]"_d')
 
