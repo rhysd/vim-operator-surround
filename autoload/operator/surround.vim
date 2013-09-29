@@ -276,7 +276,9 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
-    throw "Not implemented"
+    " This has a bug for an undo list
+    call operator#surround#delete(a:motion)
+    call operator#surround#append(a:motion)
 endfunction
 " }}}
 
