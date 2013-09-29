@@ -118,8 +118,8 @@ endfunction
 
 function! s:surround_blocks(block_begin, block_end)
     let [_, start_line, start_col, _] = getpos("'[")
-    let [_, end_line, end_col, _] = getpos("']")
-    for line in range(start_line, end_line)
+    let [_, last_line, end_col, _] = getpos("']")
+    for line in range(start_line, last_line)
         call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
                     \        line,
                     \        end_col,
