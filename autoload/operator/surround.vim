@@ -208,7 +208,10 @@ function! s:delete_surrounds_in_block()
     let save_regtype_g = getregtype('g')
     try
         for line in range(start_line, last_line)
-            call s:normal(printf('%dgg%d|v%d|"gy', line, start_col, last_col))
+            " yank to set '[ and ']
+            call s:normal(line.'gg')
+            let end_of_line_col = last_col > col('$')-1 ? col('$')-1 : last_col
+            call s:normal(printf('%d|v%d|"gy', start_col, end_of_line_col))
             call s:delete_surround('v')
         endfor
     finally
