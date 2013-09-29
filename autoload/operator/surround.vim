@@ -178,11 +178,9 @@ function! s:delete_surround(visual)
     let save_reg_g = getreg('g')
     let save_regtype_g = getregtype('g')
     try
-        call setreg('g', '', a:visual)
+        call setreg('g', '', 'v')
         call s:normal('`['.a:visual.'`]"gy')
         let region = getreg('g')
-
-        echomsg string(region)
 
         let block = s:get_surround_in(region)
         if block == []
@@ -194,7 +192,7 @@ function! s:delete_surround(visual)
         let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
 
-        call setreg('g', after, a:visual)
+        call setreg('g', after, 'v')
         call s:normal('"g'.s:get_paste_command())
     catch /vim-operator-surround/
         echoerr 'no block matches to the region'

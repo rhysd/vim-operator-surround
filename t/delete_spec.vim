@@ -29,7 +29,7 @@ describe '<Plug>(operator-surround-delete)'
 
     " error handling {{{
     it 'echos an error when no block is found in the object'
-        Line 'hoge huga poyo'
+        Line 'hoge h1Line "uga poyo'
         Expect 'normal gg0wsiw' to_throw_exception
         Expect 'normal gg0wviws' to_throw_exception
         try
@@ -67,7 +67,22 @@ describe '<Plug>(operator-surround-delete)'
     " }}}
 
     " linewise {{{
-    " TODO not implemented
+    it 'deletes blocks in a linewise object with an operator mapping'
+        1Line "\"'[<({huga huga "
+        2Line "piyo})>]'\""
+        normal ggsip
+        Expect getline(1).getline(2) ==# "'[<({huga huga piyo})>]'"
+        normal ggsip
+        Expect getline(1).getline(2) ==# "[<({huga huga piyo})>]"
+        normal ggsip
+        Expect getline(1).getline(2) ==# "<({huga huga piyo})>"
+        normal ggsip
+        Expect getline(1).getline(2) ==# "({huga huga piyo})"
+        normal ggsip
+        Expect getline(1).getline(2) ==# "{huga huga piyo}"
+        normal ggsip
+        Expect getline(1).getline(2) ==# "huga huga piyo"
+    end
     " }}}
 
     " blockwise {{{
