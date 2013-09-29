@@ -195,7 +195,7 @@ function! s:get_surround_in(region)
     if has_key(g:operator#surround#blocks, &filetype)
         let result = s:get_surround_in_filetype_in(&filetype, a:region)
         if result != [] | return result | endif
-    endfor
+    endif
 
     " '-' has the lowest priority
     if has_key(g:operator#surround#blocks, '-')
