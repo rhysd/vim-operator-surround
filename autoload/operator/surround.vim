@@ -116,10 +116,11 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
                     \ ? 'p' : 'P'
     elseif a:visual ==# 'V'
         if start_line == 1 && motion_end_line == line('$')
+            " NOTE:
             " p and P can't insert linewise object in this case
             " because 1 line remains definitely and the line remains
             " after pasting.
-            return 'p`[k"_dd'
+            return 'p`[k"_ddggVG"gy'
         endif
         return line('$') == motion_end_line ? 'p' : 'P'
     else
@@ -291,14 +292,8 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
-    if a:motion ==# 'char'
+    if a:motion ==# 'char' || a:motion ==# 'line'
         " This has a bug for an undo list
-        call operator#surround#delete(a:motion)
-        call operator#surround#append(a:motion)
-    elseif a:motion ==# 'line'
-        if getpos("'[")[1] == 1 && getpos("']")[1] == line('$')
-            throw "Not implemented"
-        endif
         call operator#surround#delete(a:motion)
         call operator#surround#append(a:motion)
     elseif a:motion ==# 'block'
