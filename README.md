@@ -34,7 +34,7 @@ Set your favorite blocks to `g:operator#surround#blocks`.
 (More explanation about this is todo)
 
 
-## Example of `vimrc`
+## Example of vimrc
 
 ```vim
 map sy <Plug>(operator-surround-append)
