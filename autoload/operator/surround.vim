@@ -240,9 +240,6 @@ function! s:delete_surround(visual)
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
-        call s:echomsg(getpos('.'))
-        call s:echomsg(getpos("'["))
-        call s:echomsg(getline(1, '$'))
     catch /vim-operator-surround/
         echoerr 'no block matches to the region'
     finally
@@ -268,6 +265,7 @@ function! s:delete_surrounds_in_block()
     endtry
 endfunction
 
+" TODO return a whole region after the process
 function! operator#surround#delete(motion)
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
@@ -293,9 +291,22 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
-    " This has a bug for an undo list
-    call operator#surround#delete(a:motion)
-    call operator#surround#append(a:motion)
+    if getpos("'[")[1] == 1 && getpos("']")[1] == line('$')
+        throw "Not implemented"
+    endif
+    if a:motion ==# 'char'
+        " This has a bug for an undo list
+        call operator#surround#delete(a:motion)
+        call operator#surround#append(a:motion)
+    elseif a:motion ==# 'line'
+        if getpos("'[")[1] == 1 && getpos("']")[1] == line('$')
+            throw "Not implemented"
+        endif
+        call operator#surround#delete(a:motion)
+        call operator#surround#append(a:motion)
+    else
+        throw "Not implemented"
+    endif
 endfunction
 " }}}
 
