@@ -119,7 +119,7 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
             " p and P can't insert linewise object in this case
             " because 1 line remains definitely and the line remains
             " after pasting.
-            throw "Unimplemented"
+            return 'p`[k"_dd'
         endif
         return line('$') == motion_end_line ? 'p' : 'P'
     else
@@ -240,6 +240,9 @@ function! s:delete_surround(visual)
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
+        call s:echomsg(getpos('.'))
+        call s:echomsg(getpos("'["))
+        call s:echomsg(getline(1, '$'))
     catch /vim-operator-surround/
         echoerr 'no block matches to the region'
     finally
