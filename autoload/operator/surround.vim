@@ -291,9 +291,6 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
-    if getpos("'[")[1] == 1 && getpos("']")[1] == line('$')
-        throw "Not implemented"
-    endif
     if a:motion ==# 'char'
         " This has a bug for an undo list
         call operator#surround#delete(a:motion)
@@ -304,8 +301,11 @@ function! operator#surround#replace(motion)
         endif
         call operator#surround#delete(a:motion)
         call operator#surround#append(a:motion)
-    else
+    elseif a:motion ==# 'block'
         throw "Not implemented"
+    else
+        " never reached here
+        throw "Invalid motion"
     endif
 endfunction
 " }}}
