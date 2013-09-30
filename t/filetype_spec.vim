@@ -28,6 +28,7 @@ describe 'filetype specific settings'
                     \   { 'block' : ["do\n", "\nend"],  'motionwise' : ['char', 'line', 'block'], 'keys' : ['do'] },
                     \   { 'block' : ["{|i| ", " }"],  'motionwise' : ['char', 'line', 'block'], 'keys' : ['{'] },
                     \ ]
+        new
     end
 
     after
