@@ -16,21 +16,25 @@ No screen shot.
 Not implemented yet.
 
 
-### Policy of this plugin (or The reason why I don't use [vim-surround](https://github.com/tpope/vim-surround))
+## Policy of this plugin (or The reason why I don't use [vim-surround](https://github.com/tpope/vim-surround))
 
 - **Simplicity** : All should be done with operator mappings.
 - **Extensibility** : The behavior should be highly customizable with `g:operator#surround#blocks` and text objects like [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
-- **Well Tested**
+- **Well-tested**
 
 
-### Customize
+## Requirements
+
+This plugin uses [vim-operator-user](https://github.com/kana/vim-operator-user). Please install it in advance.
+
+## Customize
 
 Set your favorite blocks to `g:operator#surround#blocks`.
 
 (More explanation about this is todo)
 
 
-### Example of `vimrc`
+## Example of `vimrc`
 
 ```vim
 map sy <Plug>(operator-surround-append)
@@ -38,7 +42,7 @@ map sd <Plug>(operator-surround-delete)
 map sc <Plug>(operator-surround-replace)
 ```
 
-### License
+## License
 
 vim-operator-surround is distributed under MIT license.
 
