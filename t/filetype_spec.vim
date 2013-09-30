@@ -22,13 +22,13 @@ describe 'filetype specific settings'
     before
         map sa <Plug>(operator-surround-append)
         map sd <Plug>(operator-surround-delete)
+        new
         set ft=ruby
         let g:operator#surround#blocks = {}
         let g:operator#surround#blocks['ruby'] = [
                     \   { 'block' : ["do\n", "\nend"],  'motionwise' : ['char', 'line', 'block'], 'keys' : ['do'] },
                     \   { 'block' : ["{|i| ", " }"],  'motionwise' : ['char', 'line', 'block'], 'keys' : ['{'] },
                     \ ]
-        new
     end
 
     after
