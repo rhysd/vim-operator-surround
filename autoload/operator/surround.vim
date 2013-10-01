@@ -229,7 +229,7 @@ function! s:delete_surround(visual)
 
         let block = s:get_surround_in(region)
         if block == []
-            throw 'vim-operator-surround'
+            throw 'vim-operator-surround: block is not found'
         endif
 
         let put_command = s:get_paste_command(a:visual, [getpos("'[")[1:2], getpos("']")[1:2]], len(getline("']")))
@@ -241,7 +241,7 @@ function! s:delete_surround(visual)
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
-    catch /vim-operator-surround/
+    catch /^vim-operator-surround: /
         echoerr 'no block matches to the region'
     finally
         call setreg('g', save_reg_g, save_regtype_g)
@@ -269,7 +269,6 @@ function! s:delete_surrounds_in_block()
     endtry
 endfunction
 
-" TODO return a whole region after the process
 function! operator#surround#delete(motion)
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
