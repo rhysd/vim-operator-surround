@@ -35,9 +35,21 @@ Set your favorite blocks to `g:operator#surround#blocks`.
 ## Example of vimrc
 
 ```vim
-map sy <Plug>(operator-surround-append)
-map sd <Plug>(operator-surround-delete)
-map sc <Plug>(operator-surround-replace)
+" operator mappings
+map <silent>sa <Plug>(operator-surround-append)
+map <silent>sd <Plug>(operator-surround-delete)
+map <silent>sr <Plug>(operator-surround-replace)
+
+
+" delete or replace most inner surround
+
+" if you use vim-textobj-multiblock
+nmap <silent>sD <Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)
+nmap <silent>sR <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
+
+" if you use vim-textobj-anyblock
+nmap <silent>sD <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
+nmap <silent>sR <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
 ```
 
 ## License
