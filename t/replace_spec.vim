@@ -58,9 +58,7 @@ describe '<Plug>(operator-surround-replace)'
         1Line '"hoge huga '
         2Line 'poyo"'
         3Line ''
-        echomsg string(getline(1, '$'))
         normal gg0sip{
-        echomsg string(getline(1, '$'))
         let line = getline(1).getline(2)
         Expect line ==# '{hoge huga poyo}'
         normal gg0sip'
@@ -70,13 +68,12 @@ describe '<Plug>(operator-surround-replace)'
         normal gg0sip )
         Expect getline(1).getline(2) ==# '( hoge huga poyo )'
     end
+
     it 'replace a linewise object in visual mode'
         1Line '"hoge huga '
         2Line 'poyo"'
         3Line ''
-        echomsg string(getline(1, '$'))
         normal gg0vips{
-        echomsg string(getline(1, '$'))
         let line = getline(1).getline(2)
         Expect line ==# '{hoge huga poyo}'
         normal gg0vips'
@@ -86,6 +83,15 @@ describe '<Plug>(operator-surround-replace)'
         normal gg0vips )
         Expect getline(1).getline(2) ==# '( hoge huga poyo )'
     end
+
+    it 'replace even the object is whole code which is a corner case'
+        1Line '" hoge huga '
+        2Line 'poyo"'
+        normal gg0sip{
+        Expect getline(1) ==# '{ hoge huga '
+        Expect getline(2) ==# 'poyo}'
+    end
+
     " }}}
 
     " blockwise {{{
