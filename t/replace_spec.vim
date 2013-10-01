@@ -95,7 +95,38 @@ describe '<Plug>(operator-surround-replace)'
     " }}}
 
     " blockwise {{{
-    " it 'replace a blockwise object in visual mode' 
-    " end                                            
+    it 'replace a blockwise object in visual mode'
+        1Line "(hoge)"
+        2Line "(huga)"
+        3Line "(poyo)"
+
+        execute 'normal' "gg0\<C-v>G$s{"
+        Expect getline(1) ==# "{hoge}"
+        Expect getline(2) ==# "{huga}"
+        Expect getline(3) ==# "{poyo}"
+    end
+
+    it 'replace a blockwise object even if the object is not rectangle'
+        1Line "(hogeee)"
+        2Line "(huga)"
+        3Line "(poyopiyo)"
+
+        execute 'normal' "gg0\<C-v>G$s{"
+        Expect getline(1) ==# "{hogeee}"
+        Expect getline(2) ==# "{huga}"
+        Expect getline(3) ==# "{poyopiyo}"
+    end
+
+    it 'replace a blockwise object even if the blocks in the object is not the same'
+        1Line "(hogeee)"
+        2Line "<huga>"
+        3Line "'poyopiyo'"
+
+        execute 'normal' "gg0\<C-v>G$s{"
+        Expect getline(1) ==# "{hogeee}"
+        Expect getline(2) ==# "{huga}"
+        Expect getline(3) ==# "{poyopiyo}"
+    end
     " }}}
+
 end
