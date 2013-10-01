@@ -1,19 +1,17 @@
 Operator to Surround a Text Object [![Build Status](https://travis-ci.org/rhysd/vim-operator-surround.png?branch=master)](https://travis-ci.org/rhysd/vim-operator-surround)
 ==================================
 
-This plugin provides operator mappings to surround a text object with `()`, `""` and so on.
+This plugin provides Vim operator mappings to deal with surrounds like `()`, `""` and so on.
 
-- `<Plug>(operator-surround-append)`
+It can
+- surround a text object with a specified block.
+- replace a surround in a text object with a specified block.
+- delete a surround in a text object.
+
+This plugin is more useful with [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
+And you can customize and add surround definitions in global and filetype specific scope.
 
 ![Screen shot](http://gifzo.net/BV5L18BxT86.gif)
-
-- `<Plug>(operator-surround-delete)`
-
-No screen shot.
-
-- `<Plug>(operator-surround-replace)`
-
-Not implemented yet.
 
 
 ## Policy of this plugin (or The reason why I don't use [vim-surround](https://github.com/tpope/vim-surround))
