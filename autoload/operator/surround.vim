@@ -261,6 +261,9 @@ function! s:delete_surrounds_in_block()
             call s:normal(printf('%d|v%d|"gy', start_col, end_of_line_col))
             call s:delete_surround('v')
         endfor
+
+        " leave whole region as a history of buffer changes
+        call s:normal(printf("%dgg%d|\<C-v>`]\"gy", start_line, start_col))
     finally
         call setreg('g', save_reg_g, save_regtype_g)
     endtry
@@ -292,16 +295,8 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
-    if a:motion ==# 'char' || a:motion ==# 'line'
-        " This has a bug for an undo list
-        call operator#surround#delete(a:motion)
-        call operator#surround#append(a:motion)
-    elseif a:motion ==# 'block'
-        throw "Not implemented"
-    else
-        " never reached here
-        throw "Invalid motion"
-    endif
+    call operator#surround#delete(a:motion)
+    call operator#surround#append(a:motion)
 endfunction
 " }}}
 
