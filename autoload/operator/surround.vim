@@ -190,7 +190,7 @@ function! operator#surround#append(motion)
         return
     endif
 
-    return s:append_block(block, a:motion)
+    call s:append_block(block, a:motion)
 endfunction
 " }}}
 
@@ -294,8 +294,14 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
+    " get input at first because of repetition
+    let block = s:get_block_from_input(a:motion)
+    if type(block) == type(0) && ! block
+        return
+    endif
+
     call operator#surround#delete(a:motion)
-    call operator#surround#append(a:motion)
+    call s:append_block(block, a:motion)
 endfunction
 " }}}
 
