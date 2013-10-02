@@ -77,7 +77,14 @@ function! s:get_block_from_input(motion)
     let input = ''
     while 1
         let char = getchar()
-        let input .= type(char) == type(0) ? nr2char(char) : char
+        let char = type(char) == type(0) ? nr2char(char) : char
+
+        " cancel when <C-c> or <Esc> is input
+        if char == "\<C-c>" || char == "\<Esc>"
+            return 0
+        endif
+
+        let input .= char
         let result = s:get_block_or_prefix_match(input, a:motion)
         if type(result) == type([])
             return result
