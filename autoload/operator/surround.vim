@@ -81,6 +81,7 @@ function! s:get_block_from_input(motion)
 
         " cancel when <C-c> or <Esc> is input
         if char == "\<C-c>" || char == "\<Esc>"
+            echo 'canceled.'
             return 0
         endif
 
