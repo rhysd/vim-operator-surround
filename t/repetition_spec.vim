@@ -22,7 +22,9 @@ describe '.'
 
     after
         close!
-        unmap s
+        unmap sa
+        unmap sd
+        unmap sr
     end
 
     it 'repeats appending surrounds to the same object'
