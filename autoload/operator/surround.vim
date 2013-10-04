@@ -302,7 +302,7 @@ endfunction
 
 " replace {{{
 function! operator#surround#replace(motion)
-    " get input at first because of repetition
+    " get input at first because of undo history
     let block = s:get_block_from_input(a:motion)
     if type(block) == type(0) && ! block
         return
