@@ -6,6 +6,8 @@ let g:autoloaded_operator_surround = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:last_input = {'append' : '', 'replace' : ''}
+
 " customization {{{
 let g:operator#surround#blocks = get(g:, 'operator#surround#blocks', {})
 
@@ -72,7 +74,7 @@ function! s:get_block_or_prefix_match(input, motion)
     endif
 endfunction
 
-function! s:get_block_from_input(motion)
+function! s:get_block_from_input(motion, process)
     echon 'block : '
     let input = ''
     while 1
@@ -88,6 +90,7 @@ function! s:get_block_from_input(motion)
         let input .= char
         let result = s:get_block_or_prefix_match(input, a:motion)
         if type(result) == type([])
+            let s:last_input[a:process] = input
             return result
         elseif ! result
             echoerr input . ' is not defined. Please check g:operator#surround#blocks.'
@@ -193,12 +196,13 @@ function! operator#surround#append(motion)
         return
     endif
 
-    let block = s:get_block_from_input(a:motion)
+    let block = s:get_block_from_input(a:motion, 'append')
     if type(block) == type(0) && ! block
         return
     endif
 
     call s:append_block(block, a:motion)
+    silent! call repeat#set("\<Plug>(operator-surround-repeat)".s:last_input['append'], v:count)
 endfunction
 " }}}
 
@@ -300,16 +304,19 @@ function! operator#surround#delete(motion)
 endfunction
 " }}}
 
+
 " replace {{{
 function! operator#surround#replace(motion)
     " get input at first because of undo history
-    let block = s:get_block_from_input(a:motion)
+    let block = s:get_block_from_input(a:motion, 'replace')
     if type(block) == type(0) && ! block
         return
     endif
 
     call operator#surround#delete(a:motion)
+
     call s:append_block(block, a:motion)
+    silent! call repeat#set("\<Plug>(operator-surround-repeat)".s:last_input['replace'], v:count)
 endfunction
 " }}}
 
