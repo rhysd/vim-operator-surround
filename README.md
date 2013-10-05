@@ -25,6 +25,8 @@ And you can customize and add surround definitions in global and filetype specif
 
 This plugin uses [vim-operator-user](https://github.com/kana/vim-operator-user). Please install it in advance.
 
+And this plugin supports [vim-repeat](https://github.com/tpope/vim-repeat/blob/master/autoload/repeat.vim). If you install it in advance, `.` gets more convenient.
+
 ## Customize
 
 Set your favorite blocks to `g:operator#surround#blocks`.
