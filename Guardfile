@@ -22,7 +22,7 @@ end
 guard :shell do
   watch /^(autoload|plugin|t)\/.+\.vim$/ do
     system "rake test"
-    unless $?
+    unless $?.success?
       notify "test(s) failed"
     end
   end
