@@ -6,8 +6,6 @@ let g:autoloaded_operator_surround = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:last_input = {'append' : '', 'replace' : ''}
-
 " customization {{{
 let g:operator#surround#blocks = get(g:, 'operator#surround#blocks', {})
 
@@ -41,7 +39,6 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
     delfunction s:merge
 endif
 " }}}
-
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
     for b in g:operator#surround#blocks[a:filetype]
@@ -74,7 +71,7 @@ function! s:get_block_or_prefix_match(input, motion)
     endif
 endfunction
 
-function! s:get_block_from_input(motion, process)
+function! s:get_block_from_input(motion)
     echon 'block : '
     let input = ''
     while 1
@@ -90,8 +87,7 @@ function! s:get_block_from_input(motion, process)
         let input .= char
         let result = s:get_block_or_prefix_match(input, a:motion)
         if type(result) == type([])
-            let s:last_input[a:process] = input
-            return result
+            return [input, result]
         elseif ! result
             echoerr input . ' is not defined. Please check g:operator#surround#blocks.'
             return 0
@@ -100,7 +96,6 @@ function! s:get_block_from_input(motion, process)
     endwhile
 endfunction
 " }}}
-
 " helpers {{{
 function! s:is_empty_region(begin, end)
     return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
@@ -190,19 +185,20 @@ function! s:append_block(block_pair, motion)
     endtry
 endfunction
 
-
 function! operator#surround#append(motion)
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
     endif
 
-    let block = s:get_block_from_input(a:motion, 'append')
-    if type(block) == type(0) && ! block
+    let result = s:get_block_from_input(a:motion)
+    if type(result) == type(0) && ! result
         return
     endif
+    let [input, block] = result
 
     call s:append_block(block, a:motion)
-    silent! call repeat#set("\<Plug>(operator-surround-repeat)".s:last_input['append'], v:count)
+
+    silent! call repeat#set("\<Plug>(operator-surround-repeat)".input, v:count)
 endfunction
 " }}}
 
@@ -304,19 +300,19 @@ function! operator#surround#delete(motion)
 endfunction
 " }}}
 
-
 " replace {{{
 function! operator#surround#replace(motion)
     " get input at first because of undo history
-    let block = s:get_block_from_input(a:motion, 'replace')
-    if type(block) == type(0) && ! block
+    let result = s:get_block_from_input(a:motion)
+    if type(result) == type(0) && ! result
         return
     endif
+    let [input, block] = result
 
     call operator#surround#delete(a:motion)
-
     call s:append_block(block, a:motion)
-    silent! call repeat#set("\<Plug>(operator-surround-repeat)".s:last_input['replace'], v:count)
+
+    silent! call repeat#set("\<Plug>(operator-surround-repeat)".input, v:count)
 endfunction
 " }}}
 
