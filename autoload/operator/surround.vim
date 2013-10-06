@@ -213,7 +213,6 @@ function! s:get_surround_in_filetype_in(filetype, region)
 endfunction
 
 function! s:get_surround_in(region)
-    for filetype in keys(g:operator#surround#blocks)
     if has_key(g:operator#surround#blocks, &filetype)
         let result = s:get_surround_in_filetype_in(&filetype, a:region)
         if result != [] | return result | endif
