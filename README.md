@@ -2,6 +2,7 @@ Operator to Surround a Text Object [![Build Status](https://travis-ci.org/rhysd/
 ==================================
 
 This plugin provides Vim operator mappings to deal with surrounds like `()`, `""` and so on.
+In addition, both end of the text object are the same character, vim-operator-surround recognize them as a surround (this behavior is customizable with some variables).
 
 It can
 - surround a text object with a specified block.
@@ -29,7 +30,7 @@ And this plugin supports [vim-repeat](https://github.com/tpope/vim-repeat/blob/m
 
 ## Customize
 
-Set your favorite blocks to `g:operator#surround#blocks`.
+Set your favorite blocks to `g:operator#surround#blocks`. And control the behavior with some variables.
 
 (More explanation about this is todo)
 
