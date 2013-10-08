@@ -38,8 +38,8 @@ describe 'g:operator#surround#uses_input_if_no_block'
     end
 
     it 'replaces input if the input is not a block'
-        Line "~hoge~"
-        normal sriW,
+        Line "(hoge)"
+        normal sra(,
         Expect getline('.') ==# ",hoge,"
     end
 end
