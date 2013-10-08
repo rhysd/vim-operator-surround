@@ -18,7 +18,6 @@ command! -nargs=+ -count=0 Line call <SID>line(<args>, <count>)
 
 describe '<Plug>(operator-surround-replace)'
     before
-        let g:operator#surround#uses_input_if_no_block = 0
         map s <Plug>(operator-surround-replace)
         new
     end

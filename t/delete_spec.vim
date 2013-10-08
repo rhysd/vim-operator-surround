@@ -29,7 +29,7 @@ describe '<Plug>(operator-surround-delete)'
     end
 
     " error handling {{{
-    it 'echos an error when no block is found in the object'
+    it 'echos an error when no block is found in the object if g:operator#surround#uses_input_if_no_block is not specified'
         Line 'hoge h1Line "uga poyo'
         Expect 'normal gg0wsiw' to_throw_exception
         Expect 'normal gg0wviws' to_throw_exception

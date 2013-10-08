@@ -29,7 +29,7 @@ describe '<Plug>(operator-surround-append)'
     end
 
     " error handling {{{
-    it 'echos an error message when input is invalid.'
+    it 'echos an error message when input is invalid if g:operator#surround#uses_input_if_no_block is not specified.'
         Line "hoge huga poyo"
         normal! gg0w
         Expect 'normal siw&' to_throw_exception
