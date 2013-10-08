@@ -7,9 +7,13 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " customization {{{
-let g:operator#surround#blocks = get(g:, 'operator#surround#blocks', {})
+function! s:getg(name, default)
+    return get(g:, 'operator#surround#'.a:name, a:default)
+endfunction
 
-if ! get(g:, 'operator#surround#no_default_blocks', 0)
+let g:operator#surround#blocks = s:getg('blocks', {})
+
+if ! s:getg('no_default_blocks', 0)
 
     function! s:merge(d1, d2)
         for [k, v] in items(a:d2)
@@ -38,6 +42,7 @@ if ! get(g:, 'operator#surround#no_default_blocks', 0)
 
     delfunction s:merge
 endif
+
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
