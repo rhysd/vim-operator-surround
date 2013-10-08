@@ -47,6 +47,9 @@ describe 'Default settings'
                 endfor
             endfor
         endfor
+
+        Expect 'g:operator#surround#uses_input_if_no_block' to_exist_and_default_to 1
+        Expect 'g:operator#surround#recognizes_both_end_as_surround' to_exist_and_default_to 1
     end
 
     it 'provide functions to make operator'
