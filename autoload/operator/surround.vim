@@ -44,6 +44,7 @@ if ! s:getg('no_default_blocks', 0)
 endif
 
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
+let g:operator#surround#recognizes_both_end_as_surround = s:getg('recognizes_both_end_as_surround', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
@@ -246,7 +247,14 @@ function! s:delete_surround(visual)
 
         let block = s:get_surround_in(region)
         if block == []
-            throw 'vim-operator-surround: block is not found'
+            echomsg region
+            if g:operator#surround#recognizes_both_end_as_surround &&
+             \ region =~# '^\s*\(\S\).*\1\s*$'
+                let first_char = matchstr(region, '^\s*\zs\S')
+                let block = [first_char, first_char]
+            else
+                throw 'vim-operator-surround: block is not found'
+            endif
         endif
 
         let put_command = s:get_paste_command(a:visual, [getpos("'[")[1:2], getpos("']")[1:2]], len(getline("']")))
