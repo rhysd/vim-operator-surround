@@ -15,7 +15,7 @@ And you can customize and add surround definitions in global and filetype specif
 ![Screen shot](http://gifzo.net/BV5L18BxT86.gif)
 
 
-## Policy of this plugin (or The reason why I don't use [vim-surround](https://github.com/tpope/vim-surround))
+## Policy of This Plugin (or The Reason Why I Don't Use [vim-surround](https://github.com/tpope/vim-surround))
 
 - **Simplicity** : All should be done with operator mappings.
 - **Extensibility** : The behavior should be highly customizable with `g:operator#surround#blocks` and text objects like [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
@@ -35,7 +35,7 @@ Set your favorite blocks to `g:operator#surround#blocks`. And control the behavi
 (More explanation about this is todo)
 
 
-## Example of vimrc
+## Example of `vimrc`
 
 ```vim
 " operator mappings
