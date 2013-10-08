@@ -18,6 +18,7 @@ command! -nargs=+ -count=0 Line call <SID>line(<args>, <count>)
 
 describe '<Plug>(operator-surround-append)'
     before
+        let g:operator#surround#uses_input_if_no_block = 0
         map s <Plug>(operator-surround-append)
         new
     end

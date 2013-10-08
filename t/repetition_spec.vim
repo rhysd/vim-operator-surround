@@ -30,7 +30,7 @@ describe '.'
     it 'repeats appending surrounds to the same object'
         SKIP because it doesn't work properly only in vspec environment
         Line "hoge"
-        normal saiw(
+        normal saiw(l
         normal .(l
         Expect getline('.') ==# "((hoge))"
         normal .{l

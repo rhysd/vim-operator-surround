@@ -43,6 +43,7 @@ if ! s:getg('no_default_blocks', 0)
     delfunction s:merge
 endif
 
+let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
@@ -94,8 +95,12 @@ function! s:get_block_from_input(motion)
         if type(result) == type([])
             return [input, result]
         elseif ! result
-            echoerr input . ' is not defined. Please check g:operator#surround#blocks.'
-            return 0
+            if g:operator#surround#uses_input_if_no_block
+                return [input, [input, input]]
+            else
+                echoerr input . ' is not defined. Please check g:operator#surround#blocks.'
+                return 0
+            endif
         endif
         unlet result
     endwhile
