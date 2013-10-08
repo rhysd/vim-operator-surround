@@ -9,7 +9,7 @@ It can
 - replace a surround in a text object with a specified block.
 - delete a surround in a text object.
 
-This plugin is more useful with [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
+This plugin is more useful with [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock), [vim-textobj-between](https://github.com/thinca/vim-textobj-between) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
 And you can customize and add surround definitions in global and filetype specific scope.
 
 ![Screen shot](http://gifzo.net/BV5L18BxT86.gif)
@@ -18,7 +18,7 @@ And you can customize and add surround definitions in global and filetype specif
 ## Policy of This Plugin (or The Reason Why I Don't Use [vim-surround](https://github.com/tpope/vim-surround))
 
 - **Simplicity** : All should be done with operator mappings.
-- **Extensibility** : The behavior should be highly customizable with `g:operator#surround#blocks` and text objects like [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
+- **Extensibility** : The behavior should be highly customizable with `g:operator#surround#blocks` and text objects like [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock), [vim-textobj-between](https://github.com/thinca/vim-textobj-between) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
 - **Well-tested**
 
 
@@ -53,6 +53,10 @@ nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
 " if you use vim-textobj-anyblock
 nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
 nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
+
+" if you use vim-textobj-between
+nmap <silent>sdb <Plug>(operator-surround-delete)<Plug>(textobj-between-a)
+nmap <silent>srb <Plug>(operator-surround-replace)<Plug>(textobj-between-a)
 ```
 
 ## License
