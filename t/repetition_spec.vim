@@ -6,11 +6,7 @@ call vspec#matchers#load()
 set rtp+=~/.vim/bundle/vim-operator-user
 runtime plugin/operator/surround.vim
 
-function! s:line(str, line)
-    call setline(a:line==0 ? 1 : a:line, a:str)
-endfunction
-
-command! -nargs=+ -count=0 Line call <SID>line(<args>, <count>)
+command! -nargs=+ -count=1 Line call setline(<count>, <args>)
 
 describe '.'
     before

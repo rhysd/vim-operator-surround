@@ -6,15 +6,7 @@ call vspec#matchers#load()
 set rtp+=~/.vim/bundle/vim-operator-user
 runtime plugin/operator/surround.vim
 
-function! s:line(str, line)
-    if a:line == 0
-        call setline(1, a:str)
-    else
-        call setline(a:line, a:str)
-    endif
-endfunction
-
-command! -nargs=+ -count=0 Line call <SID>line(<args>, <count>)
+command! -nargs=+ -count=1 Line call setline(<count>, <args>)
 
 describe 'g:operator#surround#recognizes_both_end_as_surround'
 
