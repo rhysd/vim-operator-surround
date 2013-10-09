@@ -247,10 +247,16 @@ function! s:delete_surround(visual)
 
         let block = s:get_surround_in(region)
         if block == []
-            if g:operator#surround#recognizes_both_end_as_surround &&
-             \ region =~# '^\s*\(\S\).*\1\s*$'
-                let first_char = matchstr(region, '^\s*\zs\S')
-                let block = [first_char, first_char]
+            if ! g:operator#surround#recognizes_both_end_as_surround
+                throw 'vim-operator-surround: block is not found'
+            endif
+
+            " Note: Use old regex engine because NFA engine has trouble with
+            " backward reference
+            let matchedlist = matchlist(region, '\%#=1^\s*\(\S\+\)\_.*\1\s*$')
+
+            if len(matchedlist) > 1
+                let block = [matchedlist[1], matchedlist[1]]
             else
                 throw 'vim-operator-surround: block is not found'
             endif
