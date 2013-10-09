@@ -9,7 +9,6 @@ runtime plugin/operator/surround.vim
 command! -nargs=+ -count=1 Line call setline(<count>, <args>)
 
 describe 'g:operator#surround#recognizes_both_end_as_surround'
-
     before
         let g:operator#surround#recognizes_both_end_as_surround = 1
         map sd <Plug>(operator-surround-delete)
@@ -23,7 +22,7 @@ describe 'g:operator#surround#recognizes_both_end_as_surround'
         unmap sr
     end
 
-    it 'deltes both end when they are the same character if they are not block'
+    it 'deletes both end when they are the same character if they are not block'
         Line "-hoge-"
         normal sdiW
         Expect getline('.') ==# "hoge"
@@ -33,5 +32,17 @@ describe 'g:operator#surround#recognizes_both_end_as_surround'
         Line "~hoge~"
         normal sriW,
         Expect getline('.') ==# ",hoge,"
+    end
+
+    it 'deletes both end when they are the same multi characters if they are not block'
+        Line "**hoge**"
+        normal sdiW
+        Expect getline('.') ==# "hoge"
+    end
+
+    it 'replaces both end when they are the same multi characters if they are not block'
+        Line "**hoge**"
+        normal sriW!
+        Expect getline('.') ==# "!hoge!"
     end
 end
