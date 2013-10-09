@@ -232,7 +232,7 @@ endfunction
 " }}}
 
 " delete {{{
-function! s:get_surround_in_filetype_in(filetype, region)
+function! s:get_surround_in_with_filetype(filetype, region)
     for b in g:operator#surround#blocks['-']
         " if the block surrounds the object
         if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
@@ -244,13 +244,13 @@ endfunction
 
 function! s:get_surround_in(region)
     if has_key(g:operator#surround#blocks, &filetype)
-        let result = s:get_surround_in_filetype_in(&filetype, a:region)
+        let result = s:get_surround_in_with_filetype(&filetype, a:region)
         if result != [] | return result | endif
     endif
 
     " '-' has the lowest priority
     if has_key(g:operator#surround#blocks, '-')
-        return s:get_surround_in_filetype_in('-', a:region)
+        return s:get_surround_in_with_filetype('-', a:region)
     else
         return []
     endif
