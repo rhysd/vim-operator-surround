@@ -1,5 +1,6 @@
-Operator to Surround a Text Object [![Build Status](https://travis-ci.org/rhysd/vim-operator-surround.png?branch=master)](https://travis-ci.org/rhysd/vim-operator-surround)
+Operator to Surround a Text Object
 ==================================
+[![Build Status](https://travis-ci.org/rhysd/vim-operator-surround.png?branch=master)](https://travis-ci.org/rhysd/vim-operator-surround)
 
 This plugin provides Vim operator mappings to deal with surrounds like `()`, `""` and so on.
 In addition, both end of the text object are the same character, vim-operator-surround recognize them as a surround (this behavior is customizable with some variables).
