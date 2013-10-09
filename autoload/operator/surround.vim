@@ -162,11 +162,14 @@ endfunction
 
 " append {{{
 function! s:surround_characters(block_begin, block_end)
+    " Update `> and `<
     call s:normal("`[v`]\<Esc>")
+    " insert block to the region
     call s:normal(printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_end, a:block_begin))
 endfunction
 
 function! s:surround_lines(block_begin, block_end)
+    " insert block to the head and tail of lines
     call s:normal( printf("%dgg$a%s\<Esc>%dgg0i%s\<Esc>",
                          \ getpos("']")[1],
                          \ a:block_end,
@@ -179,6 +182,7 @@ function! s:surround_blocks(block_begin, block_end)
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, end_col, _] = getpos("']")
     for line in range(start_line, last_line)
+        " insert block to the one line in the block region
         call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
                     \        line,
                     \        end_col,
@@ -230,6 +234,7 @@ endfunction
 " delete {{{
 function! s:get_surround_in_filetype_in(filetype, region)
     for b in g:operator#surround#blocks['-']
+        " if the block surrounds the object
         if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
             return b.block
         endif
@@ -265,8 +270,9 @@ function! s:delete_surround(visual)
                 throw 'vim-operator-surround: block is not found'
             endif
 
-            " Note: Use old regex engine because NFA engine has trouble with
-            " backward reference
+            " get the characters at both end
+            "   Note: Use old regex engine because NFA engine has trouble with
+            "   backward reference
             let matchedlist = matchlist(region, (exists('+regexpengine') ? '\%#=1' : '').'^\s*\(\S\+\)\_.*\1\s*$')
 
             if len(matchedlist) > 1
@@ -280,6 +286,7 @@ function! s:delete_surround(visual)
 
         call s:normal('`['.a:visual.'`]"_d')
 
+        " remove the former block and latter block
         let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
 
