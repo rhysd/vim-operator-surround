@@ -251,13 +251,6 @@ function! s:get_surround_in(region)
     endif
 endfunction
 
-function! s:has_nfa_engine()
-    if ! exists('s:has_nfa_engine')
-        let s:has_nfa_engine = v:version >= 704 || (v:version == 703 && has('patch970'))
-    endif
-    return s:has_nfa_engine
-endfunction
-
 function! s:delete_surround(visual)
     let save_reg_g = getreg('g')
     let save_regtype_g = getregtype('g')
@@ -274,7 +267,7 @@ function! s:delete_surround(visual)
 
             " Note: Use old regex engine because NFA engine has trouble with
             " backward reference
-            let matchedlist = matchlist(region, (s:has_nfa_engine() ? '\%#=1' : '').'^\s*\(\S\+\)\_.*\1\s*$')
+            let matchedlist = matchlist(region, (exists('+regexpengine') ? '\%#=1' : '').'^\s*\(\S\+\)\_.*\1\s*$')
 
             if len(matchedlist) > 1
                 let block = [matchedlist[1], matchedlist[1]]
