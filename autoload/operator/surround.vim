@@ -144,6 +144,20 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
         return 'P'
     endif
 endfunction
+
+" wrapper for repeat#set()
+function! s:repeat_set(input, count)
+    if ! exists('s:has_repeat_set')
+        try
+            call repeat#set("\<Plug>(operator-surround-repeat)".a:input, a:count)
+            let s:has_repeat_set = 1
+        catch /^Vim\%((\a\+)\)\=:E117/
+            let s:has_repeat_set = 0
+        endtry
+    elseif s:has_repeat_set
+        call repeat#set("\<Plug>(operator-surround-repeat)".a:input, a:count)
+    endif
+endfunction
 " }}}
 
 " append {{{
@@ -209,7 +223,7 @@ function! operator#surround#append(motion)
 
     call s:append_block(block, a:motion)
 
-    silent! call repeat#set("\<Plug>(operator-surround-repeat)".input, v:count)
+    call s:repeat_set(input, v:count)
 endfunction
 " }}}
 
@@ -341,7 +355,7 @@ function! operator#surround#replace(motion)
     call operator#surround#delete(a:motion)
     call s:append_block(block, a:motion)
 
-    silent! call repeat#set("\<Plug>(operator-surround-repeat)".input, v:count)
+    call s:repeat_set(input, v:count)
 endfunction
 " }}}
 
