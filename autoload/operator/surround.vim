@@ -113,7 +113,7 @@ function! s:is_empty_region(begin, end)
 endfunction
 
 function! s:normal(cmd)
-    execute 'silent' 'normal!' a:cmd
+    execute 'keepjumps' 'silent' 'normal!' a:cmd
 endfunction
 
 function! s:echomsg(message, ...)
