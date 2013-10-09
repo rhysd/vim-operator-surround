@@ -12,7 +12,9 @@ It can
 This plugin is more useful with [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock), [vim-textobj-between](https://github.com/thinca/vim-textobj-between) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
 And you can customize and add surround definitions in global and filetype specific scope.
 
-![Screen shot](http://gifzo.net/BV5L18BxT86.gif)
+![Screen shot](http://gifzo.net/VpXxHKOiVn.gif)
+
+Mappings in this screen shot are the same as below setting example.
 
 
 ## Policy of This Plugin (or The Reason Why I Don't Use [vim-surround](https://github.com/tpope/vim-surround))
