@@ -247,7 +247,6 @@ function! s:delete_surround(visual)
 
         let block = s:get_surround_in(region)
         if block == []
-            echomsg region
             if g:operator#surround#recognizes_both_end_as_surround &&
              \ region =~# '^\s*\(\S\).*\1\s*$'
                 let first_char = matchstr(region, '^\s*\zs\S')
