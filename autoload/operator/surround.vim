@@ -194,9 +194,14 @@ function! s:surround_blocks(block_begin, block_end)
 endfunction
 
 function! s:append_block(block_pair, motion)
-    let pos = getpos('.')
+    let pos_save = getpos('.')
     let autoindent_save = &autoindent
+    let cindent_save = &cindent
+    let smartindent_save = &smartindent
     set noautoindent
+    set nocindent
+    set nosmartindent
+
     try
         if a:motion ==# 'char'
             call s:surround_characters(a:block_pair[0], a:block_pair[1])
@@ -209,8 +214,10 @@ function! s:append_block(block_pair, motion)
             throw "Invalid motion"
         endif
     finally
-        call setpos('.', pos)
+        call setpos('.', pos_save)
         let &autoindent = autoindent_save
+        let &cindent = cindent_save
+        let &smartindent = smartindent_save
     endtry
 endfunction
 
