@@ -1,0 +1,110 @@
+*operator-surround.txt*                 operator mappings to deal with surrounds
+
+Author : rhysd <lin90162@yahoo.co.jp>
+
+CONTENTS         *operator-surround-contents*
+
+Introduction     |operator-surround-introduction|
+Usage            |operator-surround-usage|
+Policy           |operator-surround-policy|
+Install          |operator-surround-install|
+Dependency       |operator-surround-dependency|
+Mappings         |operator-surround-mappings|
+Variables        |operator-surround-variables|
+Setup Example    |operator-surround-setup-example|
+Repository Page  |operator-surround-repository-page|
+License          |operator-surround-license|
+
+==============================================================================
+INTRODUCTION                                    *operator-surround-introduction*
+
+*operator-surround* provides Vim operator mappings to deal with surrounds like
+() , '', "" and so on.  In addition, when both end of the text object are the
+same character, |operator-surround| recognizes them as a surround (this
+behavior is customizable with some variables).
+Definition of blocks are very customizable with |g:operator#surround#blocks|.
+
+
+==============================================================================
+USAGE                                                  *operator-surround-usage*
+
+
+==============================================================================
+POLICY                                                *operator-surround-policy*
+
+
+==============================================================================
+DEPENDENCY                                        *operator-surround-dependency*
+
+|operator-user| (requried)
+    https://github.com/kana/vim-operator-user
+
+|vim-repeat| (recommended)
+    https://github.com/tpope/vim-repeat
+
+
+==============================================================================
+MAPPINGS                                             *operator-surround-mappings*
+
+<Plug>(operator-surround-append)              *<Plug>(operator-surround-append)*
+<Plug>(operator-surround-delete)              *<Plug>(operator-surround-delete)*
+<Plug>(operator-surround-replace)            *<Plug>(operator-surround-replace)*
+
+
+
+==============================================================================
+VARIABLES                                          *operator-surround-variables*
+
+g:operator#surround#blocks                          *g:operator#surround#blocks*
+                                    *g:operator#surround#uses_input_if_no_block*
+g:operator#surround#uses_input_if_no_block
+                           *g:operator#surround#recognizes_both_end_as_surround*
+g:operator#surround#recognizes_both_end_as_surround
+g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
+
+
+
+
+==============================================================================
+SETUP EXAMPLE                                  *operator-surround-setup-example*
+
+>
+
+==============================================================================
+REPOSITORY PAGE                              *operator-surround-repository-page*
+
+The latest version of |operator-surround| is available at
+https://github.com/rhysd/vim-operator-surround
+
+Contributions (pull requests) are welcome. None of them are too short.
+Especially, English check is very helpful because I'm poor at English :(
+
+
+==============================================================================
+LICENSE                                              *operator-surround-license*
+
+|operator-surround| is distributed under MIT license.
+
+  Copyright (c) 2013 rhysd
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the
+  "Software"), to deal in the Software without restriction, including
+  without limitation the rights to use, copy, modify, merge, publish,
+  distribute, sublicense, and/or sell copies of the Software, and to
+  permit persons to whom the Software is furnished to do so, subject to
+  the following conditions:
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+==============================================================================
+vim:tw=78:colorcolumn=78:ts=8:ft=help:norl:noet:fen:fdl=0:
