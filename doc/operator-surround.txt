@@ -88,7 +88,7 @@ These mapping are for |mapmode-x| and |mapmode-n|.
 <Plug>(operator-surround-append)              *<Plug>(operator-surround-append)*
 
     Operator mapping to surround the text-object.  After you specify text
-    object, you must input some keysequence.  If the sequence is defined in
+    object, you must input some key sequence.  If the sequence is defined in
     |g:operator#surround#blocks|, the block is appended.  Otherwise, the input
     would be appended to the both end of the text-object.
 
