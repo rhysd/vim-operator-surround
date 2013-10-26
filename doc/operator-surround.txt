@@ -50,6 +50,9 @@ with ''.
 <
 Default blocks are (), [], {}, <>, "", '', ``, (  ) and {  }.
 
+This plugin supports |vim-repeat|. If it is installed, all operation are
+repeatable with |.| without inputting key sequence again.
+
 
 ==============================================================================
 POLICY (or why I don't use |vim-surround|)              *operator-surround-policy*
