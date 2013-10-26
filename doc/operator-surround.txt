@@ -204,7 +204,6 @@ SETUP EXAMPLE                                  *operator-surround-setup-example*
 Below is an example of setting for .vimrc. Note that these mappings overwrite
 |s|.
 >
->
     " add ```...``` surround when filetype is markdown
     let g:operator#surround#blocks = {
         \ 'markdown' : [
@@ -234,7 +233,7 @@ Below is an example of setting for .vimrc. Note that these mappings overwrite
     nmap <silent>sdb <Plug>(operator-surround-delete)<Plug>(textobj-between-a)
     nmap <silent>srb <Plug>(operator-surround-replace)<Plug>(textobj-between-a)
 <
->
+
 ------------------------------------------------------------------------------
 |vim-surround| COMPATIBLE SETTING      *operator-surround-vim-surround-compatible*
 
