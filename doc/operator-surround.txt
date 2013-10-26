@@ -105,19 +105,96 @@ These mapping are for |mapmode-x| and |mapmode-n|.
     Operator mapping to replace surround with other surround in the
     text-object.  This mapping's process is the same sequence as 'first, do
     <Plug>(operator-surround-delete) and second, do
-    <Plug>(operator-surround-replace)'
+    <Plug>(operator-surround-replace)'.
 
 
 ==============================================================================
 VARIABLES                                          *operator-surround-variables*
 
 g:operator#surround#blocks                          *g:operator#surround#blocks*
+
+    Block definitions. This is |Dictionary| of |List| whose elements represent
+    a block.  This value is merged with default definitions if you not specify
+    |g:operator#surround#no_default_blocks|.
+
+    For example, below is default definitions:
+>
+    \ {
+    \   '-' : [
+    \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
+    \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
+    \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
+    \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
+    \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
+    \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
+    \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
+    \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
+    \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+    \   ],
+    \ }
+<
+    The keys of |g:operator#surround#blocks|('-' in above example) mean
+    filetypes.  If you specify 'ruby', it means its blocks is available only
+    in Ruby sources.  '-' is a special key and it means its blocks is
+    available in any filetypes.
+    The values of |g:operator#surround#blocks| represent a block definition.
+    It is |Dictionary| and must have keys, block, motionwise and keys.
+
+      - block
+        Key block means a surround which is consisted with the pair of the begin
+        of it and the end of it.
+
+      - motionwise
+        Key motionwise represents that which kind of text object, the block is
+        available.  'char' means characterwise, 'line' means linewise and
+        'block' means blockwise. In above example, () is used in all kinds of
+        objects.
+
+      - keys
+        Key keys are input you specify in |<Plug>(operator-surround-append)|
+        or |<Plug>(operator-surround-replace)|. If your input is equivalent to
+        any of these values, the block is selected.  The length of input can
+        be more than 1.  In above example, if you input <Space>( , (  ) would
+        be selected.
+
                                     *g:operator#surround#uses_input_if_no_block*
 g:operator#surround#uses_input_if_no_block
+
+    If the value is 1, use input value when append and replace surrounds.  For
+    example, if you input ! and ! is not any keys in block definitions, the
+    text-object would be surrounded with !.
+    The default value is 1.
+
                            *g:operator#surround#recognizes_both_end_as_surround*
 g:operator#surround#recognizes_both_end_as_surround
+
+    If the value is 1, if the both end of the text-object is the same
+    sequence, it is recognized as a surround.  For example, if !?hoge!? is a
+    text-object, both end of sequence, !?, is recognized as surround.
+    The default value is 1.
+
 g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 
+    If the value is 1, do not change |g:operator#surround#blocks|.  If the
+    value is 0, |g:operator#surround#blocks| is merged with default block
+    definitions at loading.
+    The default block definitions are:
+>
+    \ {
+    \   '-' : [
+    \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
+    \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
+    \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
+    \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
+    \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
+    \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
+    \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
+    \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
+    \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+    \   ],
+    \ }
+<
+    The default value is 0.
 
 
 
