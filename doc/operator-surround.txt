@@ -48,7 +48,7 @@ with ''.
 >
     "hoge" -> 'hoge'
 <
-Default blocks are (), [], {}, <>, "", '' and ``.
+Default blocks are (), [], {}, <>, "", '', ``, (  ) and {  }.
 
 
 ==============================================================================
@@ -84,10 +84,25 @@ These mapping are for |mapmode-x| and |mapmode-n|.
 
 <Plug>(operator-surround-append)              *<Plug>(operator-surround-append)*
 
-    Operator mapping to surround the text-object.
+    Operator mapping to surround the text-object.  After you specify text
+    object, you must input some keysequence.  If the sequence is defined in
+    |g:operator#surround#blocks|, the block is appended.  Otherwise, the input
+    would be appended to the both end of the text-object.
+
 <Plug>(operator-surround-delete)              *<Plug>(operator-surround-delete)*
+
+    Operator mapping to delete the surround in the text-object.  If the
+    text-object is a block defined in |g:operator#surround#blocks| like (hoge)
+    or if the text object's both end is the same sequence like !?hoge!?, the
+    surrounds would be deleted.  For example, ( and ) for (hoge) and !? and !?
+    for !?hoge!?.
+
 <Plug>(operator-surround-replace)            *<Plug>(operator-surround-replace)*
 
+    Operator mapping to replace surround with other surround in the
+    text-object.  This mapping's process is the same sequence as 'first, do
+    <Plug>(operator-surround-delete) and second, do
+    <Plug>(operator-surround-replace)'
 
 
 ==============================================================================
