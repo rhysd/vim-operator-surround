@@ -16,6 +16,7 @@ Setup Example    |operator-surround-setup-example|
 pository Page  |operator-surround-repository-page|
 License          |operator-surround-license|
 
+
 ==============================================================================
 INTRODUCTION                                    *operator-surround-introduction*
 
@@ -47,9 +48,23 @@ with ''.
 >
     "hoge" -> 'hoge'
 <
+Default blocks are (), [], {}, <>, "", '' and ``.
+
 
 ==============================================================================
-POLICY                                                *operator-surround-policy*
+POLICY (or why I don't use |vim-surround|)              *operator-surround-policy*
+
+- Simplicity    : All should be done with operator mappings.
+- Extensibility : The behavior should be highly customizable with
+                  |g:operator#surround#blocks| and text objects like
+                  vim-textobj-multiblock, vim-textobj-between or
+                  vim-textobj-anyblock.
+- Well-tested
+
+c.f.
+https://github.com/osyo-manga/vim-textobj-multiblock
+https://github.com/thinca/vim-textobj-between
+https://github.com/rhysd/vim-textobj-anyblock
 
 
 ==============================================================================
@@ -65,7 +80,11 @@ DEPENDENCY                                        *operator-surround-dependency*
 ==============================================================================
 MAPPINGS                                             *operator-surround-mappings*
 
+These mapping are for |mapmode-x| and |mapmode-n|.
+
 <Plug>(operator-surround-append)              *<Plug>(operator-surround-append)*
+
+    Operator mapping to surround the text-object.
 <Plug>(operator-surround-delete)              *<Plug>(operator-surround-delete)*
 <Plug>(operator-surround-replace)            *<Plug>(operator-surround-replace)*
 
