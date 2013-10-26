@@ -13,7 +13,7 @@ Mappings         |operator-surround-mappings|
 Variables        |operator-surround-variables|
 Setup Example    |operator-surround-setup-example|
     |vim-surround| Compatible Setting  |operator-surround-vim-surround-compatible|
-pository Page  |operator-surround-repository-page|
+Repository Page  |operator-surround-repository-page|
 License          |operator-surround-license|
 
 
