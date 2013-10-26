@@ -12,7 +12,8 @@ Dependency       |operator-surround-dependency|
 Mappings         |operator-surround-mappings|
 Variables        |operator-surround-variables|
 Setup Example    |operator-surround-setup-example|
-Repository Page  |operator-surround-repository-page|
+    |vim-surround| Compatible Setting  |operator-surround-vim-surround-compatible|
+pository Page  |operator-surround-repository-page|
 License          |operator-surround-license|
 
 ==============================================================================
@@ -28,6 +29,24 @@ Definition of blocks are very customizable with |g:operator#surround#blocks|.
 ==============================================================================
 USAGE                                                  *operator-surround-usage*
 
+First, set |operator-surround-mappings| to your favorite mappings. These
+mappings append/delete/replace the |text-objects| you specified.
+
+To append surrounds, use |<Plug>(operator-surround-append)|.  For example, if
+you maps it to |sa|, |saiw(| surrounds current inner word with ().  |iw| is a
+text object for inner words.
+
+To delete surrounds, use |<Plug>(operator-surround-delete)|.  For example, if
+you maps it to |sd|, |sdiW| deletes a surround which is included in a word.
+>
+    (hoge) -> hoge
+<
+To replace surrounds, use |<Plug>(operator-surround-replace)|.  For example,
+if you maps it to |sr|, |sriW'| replaces a surround which is included in a word
+with ''.
+>
+    "hoge" -> 'hoge'
+<
 
 ==============================================================================
 POLICY                                                *operator-surround-policy*
@@ -69,6 +88,9 @@ g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 SETUP EXAMPLE                                  *operator-surround-setup-example*
 
 >
+------------------------------------------------------------------------------
+|vim-surround| COMPATIBLE SETTING      *operator-surround-vim-surround-compatible*
+
 
 ==============================================================================
 REPOSITORY PAGE                              *operator-surround-repository-page*
