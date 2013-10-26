@@ -201,6 +201,39 @@ g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 ==============================================================================
 SETUP EXAMPLE                                  *operator-surround-setup-example*
 
+Below is an example of setting for .vimrc. Note that these mappings overwrite
+|s|.
+>
+>
+    " add ```...``` surround when filetype is markdown
+    let g:operator#surround#blocks = {
+        \ 'markdown' : [
+    \       { 'block' : ["```\n", "\n```"], 'motionwise' : ['line'], 'keys' : ['`'] },
+        \ ] }
+
+    " operator mappings
+    map <silent>sa <Plug>(operator-surround-append)
+    map <silent>sd <Plug>(operator-surround-delete)
+    map <silent>sr <Plug>(operator-surround-replace)
+
+
+    " delete or replace most inner surround using vim-textobj-multiblock or
+    " vim-textobj-anyblock
+
+    " if you use vim-textobj-multiblock
+    nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-multiblock-a)
+    nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-multiblock-a)
+    " if you use vim-textobj-anyblock
+    nmap <silent>sdd <Plug>(operator-surround-delete)<Plug>(textobj-anyblock-a)
+    nmap <silent>srr <Plug>(operator-surround-replace)<Plug>(textobj-anyblock-a)
+
+    " delete or replace the object which is put between the same character
+    " using vim-textobj-between
+
+    " if you use vim-textobj-between
+    nmap <silent>sdb <Plug>(operator-surround-delete)<Plug>(textobj-between-a)
+    nmap <silent>srb <Plug>(operator-surround-replace)<Plug>(textobj-between-a)
+<
 >
 ------------------------------------------------------------------------------
 |vim-surround| COMPATIBLE SETTING      *operator-surround-vim-surround-compatible*
