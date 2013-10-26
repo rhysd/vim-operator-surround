@@ -238,6 +238,22 @@ Below is an example of setting for .vimrc. Note that these mappings overwrite
 ------------------------------------------------------------------------------
 |vim-surround| COMPATIBLE SETTING      *operator-surround-vim-surround-compatible*
 
+If you use |operator-surround| as an alternative to |vim-surround|. You may
+want to use |operator-surround| with the same mappings as |vim-surround|.
+But I don't recommend this setting because the feature which
+|operator-surround| provides is not the one which |vim-surround| provides.
+I think this setting can't take the advantage of |operator-surround|.  And note
+that these mappings overwrite some Vim's default mappings(for example, y in
+visual mode).
+
+>
+    map <silent>ys <Plug>(operator-surround-append)
+    map <silent>ds <Plug>(operator-surround-delete)
+    map <silent>cs <Plug>(operator-surround-replace)
+    nmap <silent>yss V<Plug>(operator-surround-append)
+    nmap <silent>dss V<Plug>(operator-surround-delete)
+    nmap <silent>css V<Plug>(operator-surround-replace)
+<
 
 ==============================================================================
 REPOSITORY PAGE                              *operator-surround-repository-page*
