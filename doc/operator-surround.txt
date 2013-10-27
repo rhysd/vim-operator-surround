@@ -21,10 +21,10 @@ License          |operator-surround-license|
 INTRODUCTION                                    *operator-surround-introduction*
 
 *operator-surround* provides Vim operator mappings to deal with surrounds like
-() , '', "" and so on.  In addition, when both end of the text object are the
-same character, |operator-surround| recognizes them as a surround (this
+() , '', "" and so on.  In addition, when both ends of the text-object are the
+same characters, |operator-surround| recognizes them as a surround (this
 behavior is customizable with some variables).
-Definition of blocks are very customizable with |g:operator#surround#blocks|.
+Definitions of blocks are very customizable with |g:operator#surround#blocks|.
 
 
 ==============================================================================
@@ -50,7 +50,7 @@ with ''.
 <
 Default blocks are (), [], {}, <>, "", '', ``, (  ) and {  }.
 
-This plugin supports |vim-repeat|. If it is installed, all operation are
+This plugin supports |vim-repeat|. If it is installed, all operations are
 repeatable with |.| without inputting key sequence again.
 
 
@@ -83,21 +83,21 @@ DEPENDENCY                                        *operator-surround-dependency*
 ==============================================================================
 MAPPINGS                                             *operator-surround-mappings*
 
-These mapping are for |mapmode-x| and |mapmode-n|.
+These mappings are for |mapmode-x| and |mapmode-n|.
 
 <Plug>(operator-surround-append)              *<Plug>(operator-surround-append)*
 
     Operator mapping to surround the text-object.  After you specify text
     object, you must input some key sequence.  If the sequence is defined in
-    |g:operator#surround#blocks|, the block is appended.  Otherwise, the input
-    would be appended to the both end of the text-object.
+    |g:operator#surround#blocks|, the block would be appended.  Otherwise, the
+    input would be appended to the both ends of the text-object.
 
 <Plug>(operator-surround-delete)              *<Plug>(operator-surround-delete)*
 
     Operator mapping to delete the surround in the text-object.  If the
     text-object is a block defined in |g:operator#surround#blocks| like (hoge)
-    or if the text object's both end is the same sequence like !?hoge!?, the
-    surrounds would be deleted.  For example, ( and ) for (hoge) and !? and !?
+    or if the text object's both ends are the same sequence like !?hoge!?, the
+    surrounds would be deleted.  For example, ( and ) for (hoge), !? and !?
     for !?hoge!?.
 
 <Plug>(operator-surround-replace)            *<Plug>(operator-surround-replace)*
@@ -105,7 +105,7 @@ These mapping are for |mapmode-x| and |mapmode-n|.
     Operator mapping to replace surround with other surround in the
     text-object.  This mapping's process is the same sequence as 'first, do
     <Plug>(operator-surround-delete) and second, do
-    <Plug>(operator-surround-replace)'.
+    <Plug>(operator-surround-append)'.
 
 
 ==============================================================================
@@ -137,12 +137,13 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
     filetypes.  If you specify 'ruby', it means its blocks is available only
     in Ruby sources.  '-' is a special key and it means its blocks is
     available in any filetypes.
-    The values of |g:operator#surround#blocks| represent a block definition.
-    It is |Dictionary| and must have keys, block, motionwise and keys.
+    The values of |g:operator#surround#blocks| represent block definitions.
+    They are |Dictionary| and must have following keys; block, motionwise and
+    keys.
 
       - block
-        Key block means a surround which is consisted with the pair of the begin
-        of it and the end of it.
+        'block' means a surround which is consisted with the pair of the
+        begin of it and the end of it.
 
       - motionwise
         Key motionwise represents that which kind of text object, the block is
@@ -151,26 +152,28 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
         objects.
 
       - keys
-        Key keys are input you specify in |<Plug>(operator-surround-append)|
+        'keys' are input you specify in |<Plug>(operator-surround-append)|
         or |<Plug>(operator-surround-replace)|. If your input is equivalent to
-        any of these values, the block is selected.  The length of input can
-        be more than 1.  In above example, if you input <Space>( , (  ) would
-        be selected.
+        any of these values, the block is selected.  Length of input can be
+        more than 1.  In above example, if you input <Space>( , (  ) would be
+        selected.
 
                                     *g:operator#surround#uses_input_if_no_block*
 g:operator#surround#uses_input_if_no_block
 
-    If the value is 1, use input value when append and replace surrounds.  For
-    example, if you input ! and ! is not any keys in block definitions, the
-    text-object would be surrounded with !.
+    If the value is 1, use not only block definitions but also input sequence
+    when appending and replacing surrounds.  For example, if you input ! and
+    ! is not any keys in block definitions, the text-object would be
+    surrounded with !.
     The default value is 1.
 
                            *g:operator#surround#recognizes_both_end_as_surround*
 g:operator#surround#recognizes_both_end_as_surround
 
-    If the value is 1, if the both end of the text-object is the same
-    sequence, it is recognized as a surround.  For example, if !?hoge!? is a
-    text-object, both end of sequence, !?, is recognized as surround.
+    If the value is 1, if the both ends of the text-object are the same
+    sequence, the sequence is recognized as a surround.  For example, if
+    !?hoge!? is a text-object, both ends of sequence is the same sequence, !?.
+    Then it is recognized as surround.
     The default value is 1.
 
 g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
@@ -244,7 +247,6 @@ But I don't recommend this setting because the feature which
 I think this setting can't take the advantage of |operator-surround|.  And note
 that these mappings overwrite some Vim's default mappings(for example, y in
 visual mode).
-
 >
     map <silent>ys <Plug>(operator-surround-append)
     map <silent>ds <Plug>(operator-surround-delete)
