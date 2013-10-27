@@ -167,8 +167,8 @@ g:operator#surround#uses_input_if_no_block
     surrounded with !.
     The default value is 1.
 
-                           *g:operator#surround#recognizes_both_end_as_surround*
-g:operator#surround#recognizes_both_end_as_surround
+                          *g:operator#surround#recognizes_both_ends_as_surround*
+g:operator#surround#recognizes_both_ends_as_surround
 
     If the value is 1, if the both ends of the text-object are the same
     sequence, the sequence is recognized as a surround.  For example, if

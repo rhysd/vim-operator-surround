@@ -44,7 +44,7 @@ if ! s:getg('no_default_blocks', 0)
 endif
 
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
-let g:operator#surround#recognizes_both_end_as_surround = s:getg('recognizes_both_end_as_surround', 1)
+let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
@@ -273,7 +273,7 @@ function! s:delete_surround(visual)
 
         let block = s:get_surround_in(region)
         if block == []
-            if ! g:operator#surround#recognizes_both_end_as_surround
+            if ! g:operator#surround#recognizes_both_ends_as_surround
                 throw 'vim-operator-surround: block is not found'
             endif
 
