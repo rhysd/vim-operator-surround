@@ -76,9 +76,9 @@ INSTALL                                              *operator-surround-install*
 Using Vim plugin package manager is recommended.  I use |neobundle| and
 |vundle| seems the most famous.
 If you want to install manually, it is not recommended, copy files and
-directories in autoload and plugin directories to your vim config directory.
-vim config directory is usually $HOME/vimfiles on Windows or ~/.vim in other
-operating systems.
+directories in autoload, doc and plugin directories to your vim config
+directory.  Vim config directory is usually $HOME/vimfiles on Windows or
+~/.vim in other operating systems.
 
 
 ==============================================================================
