@@ -160,6 +160,10 @@ function! s:repeat_set(input, count)
 endfunction
 " }}}
 
+" TODO
+" - escape string when the surround is "" or ''
+"   - add an option to escape for g:operator#surround#blocks
+
 " append {{{
 function! s:surround_characters(block_begin, block_end)
     " Update `> and `<
