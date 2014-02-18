@@ -6,19 +6,22 @@ call vspec#matchers#load()
 set rtp+=~/.vim/bundle/vim-operator-user
 runtime plugin/operator/surround.vim
 
-describe 'Default settings'
-    before
-        let g:operator#surround#blocks = {
-                    \ '-' : [
-                    \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] }
-                    \ ],
-                    \ 'test' : [
-                    \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] }
-                    \ ]
-                    \ }
-        runtime autoload/operator/surround.vim
-    end
+let g:operator#surround#blocks = {
+            \ '-' : [
+            \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] }
+            \ ],
+            \ 'test' : [
+            \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] }
+            \ ]
+            \ }
 
+try
+    call feedkeys('(')
+    call operator#surround#append('char')
+catch
+endtry
+
+describe 'Default settings'
     it 'provide variables to customize'
         Expect 'g:operator#surround#blocks' to_exist
         Expect g:operator#surround#blocks == {
