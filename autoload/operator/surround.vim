@@ -1,8 +1,3 @@
-if exists('g:autoloaded_operator_surround')
-    finish
-endif
-let g:autoloaded_operator_surround = 1
-
 let s:save_cpo = &cpo
 set cpo&vim
 
