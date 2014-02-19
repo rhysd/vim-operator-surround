@@ -94,7 +94,7 @@ function! s:get_block_from_input(motion)
             if g:operator#surround#uses_input_if_no_block
                 return [input, [input, input]]
             else
-                echoerr input . ' is not defined. Please check g:operator#surround#blocks.'
+                call s:echomsg(input . ' is not defined. Please check g:operator#surround#blocks.', 'ErrorMsg')
                 return 0
             endif
         endif
@@ -299,7 +299,7 @@ function! s:delete_surround(visual)
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
     catch /^vim-operator-surround: /
-        echoerr 'no block matches to the region'
+        call s:echomsg('no block matches to the region', 'ErrorMsg')
     finally
         call setreg('g', save_reg_g, save_regtype_g)
     endtry
