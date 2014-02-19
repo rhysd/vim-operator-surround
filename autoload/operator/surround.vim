@@ -197,9 +197,11 @@ function! s:append_block(block_pair, motion)
     let autoindent_save = &autoindent
     let cindent_save = &cindent
     let smartindent_save = &smartindent
+    let selection_save = &selection
     set noautoindent
     set nocindent
     set nosmartindent
+    set selection=inclusive
 
     try
         if a:motion ==# 'char'
@@ -217,6 +219,7 @@ function! s:append_block(block_pair, motion)
         let &autoindent = autoindent_save
         let &cindent = cindent_save
         let &smartindent = smartindent_save
+        let &selection = selection_save
     endtry
 endfunction
 
@@ -332,6 +335,8 @@ function! operator#surround#delete(motion)
     endif
 
     let pos = getpos('.')
+    let selection = &selection
+    set selection=inclusive
     try
         if a:motion ==# 'char'
             call s:delete_surround('v')
@@ -345,6 +350,7 @@ function! operator#surround#delete(motion)
         endif
     finally
         call setpos('.', pos)
+        let &selection = selection
     endtry
 endfunction
 " }}}
