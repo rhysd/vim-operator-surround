@@ -22,9 +22,16 @@ describe '<Plug>(operator-surround-delete)'
 
     " error handling {{{
     it 'echos an error when no block is found in the object if g:operator#surround#uses_input_if_no_block is not specified'
-        Line 'hoge h1Line "uga poyo'
-        Expect 'normal gg0wsiw' to_throw_exception
-        Expect 'normal gg0wviws' to_throw_exception
+        Line 'hoge huga poyo'
+        redir => buffer
+            silent normal gg0wsiw
+        redir END
+        Expect buffer =~# 'no block matches to the region'
+        let buffer = ''
+        redir => buffer
+            silent normal gg0wviws
+        redir END
+        Expect buffer =~# 'no block matches to the region'
         try
             Expect 'normal gg0wsiw' not to_move_cursor
             Expect 'normal gg0wviws' not to_move_cursor

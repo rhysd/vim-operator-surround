@@ -24,8 +24,15 @@ describe '<Plug>(operator-surround-append)'
     it 'echos an error message when input is invalid if g:operator#surround#uses_input_if_no_block is not specified.'
         Line "hoge huga poyo"
         normal! gg0w
-        Expect 'normal siw&' to_throw_exception
-        Expect 'normal viws&' to_throw_exception
+        redir => buffer
+            silent normal siw&
+        redir END
+        Expect buffer =~# "& is not defined. Please check g:operator#surround#blocks."
+        let buffer = ''
+        redir => buffer
+            silent normal viws&
+        redir END
+        Expect buffer =~# "& is not defined. Please check g:operator#surround#blocks."
         try
             Expect 'normal siw&' not to_move_cursor
             Expect 'normal viws&' not to_move_cursor
