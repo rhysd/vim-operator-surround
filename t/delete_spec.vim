@@ -116,4 +116,28 @@ describe '<Plug>(operator-surround-delete)'
     end
     " }}}
 
+    " for issues {{{
+    it 'does not occur an error when :set selection=exclusive (Issue #1)'
+        let selection = &selection
+        set selection=exclusive
+
+        Line "hoge \"'[<({huga})>]'\" piyo"
+        normal! gg0ww
+        normal siWw
+        Expect getline('.') ==# "hoge '[<({huga})>]' piyo"
+        normal siWw
+        Expect getline('.') ==# "hoge [<({huga})>] piyo"
+        normal siWw
+        Expect getline('.') ==# "hoge <({huga})> piyo"
+        normal siWw
+        Expect getline('.') ==# "hoge ({huga}) piyo"
+        normal siWw
+        Expect getline('.') ==# "hoge {huga} piyo"
+        normal siWw
+        Expect getline('.') ==# "hoge huga piyo"
+
+        let &selection = selection
+    end
+    " }}}
+
 end
