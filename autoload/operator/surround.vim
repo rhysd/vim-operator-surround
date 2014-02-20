@@ -41,10 +41,11 @@ endif
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
 " }}}
+
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
     for b in g:operator#surround#blocks[a:filetype]
-        if index(b.motionwise, a:motion) >= 0
+        if index(b.motionwise, a:motion) >= 0 || empty(a:motion)
             if index(b.keys, a:input) >= 0
                 " completely matched
                 return b.block
@@ -159,6 +160,12 @@ endfunction
 " - escape string when the surround is "" or ''
 "   - add an option to escape for g:operator#surround#blocks
 
+" wrap to input block in advance
+function! operator#surround#wrap(rhs)
+    let s:input = s:get_block_from_input('')
+    return a:rhs
+endfunction
+
 " append {{{
 function! s:surround_characters(block_begin, block_end)
     " Update `> and `<
@@ -183,12 +190,13 @@ function! s:surround_blocks(block_begin, block_end)
     for line in range(start_line, last_line)
         " insert block to the one line in the block region
         call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
-                    \        line,
-                    \        end_col,
-                    \        a:block_end,
-                    \        start_col,
-                    \        a:block_begin)
-                    \ )
+                   \         line,
+                   \         end_col,
+                   \         a:block_end,
+                   \         start_col,
+                   \         a:block_begin
+                   \     )
+                   \ )
     endfor
 endfunction
 
@@ -228,7 +236,13 @@ function! operator#surround#append(motion)
         return
     endif
 
-    let result = s:get_block_from_input(a:motion)
+    if exists('s:input')
+        let result = deepcopy(s:input)
+        unlet s:input
+    else
+        let result = s:get_block_from_input(a:motion)
+    endif
+
     if type(result) == type(0) && ! result
         return
     endif
@@ -358,7 +372,12 @@ endfunction
 " replace {{{
 function! operator#surround#replace(motion)
     " get input at first because of undo history
-    let result = s:get_block_from_input(a:motion)
+    if exists('s:input')
+        let result = deepcopy(s:input)
+        unlet s:input
+    else
+        let result = s:get_block_from_input(a:motion)
+    endif
     if type(result) == type(0) && ! result
         return
     endif
