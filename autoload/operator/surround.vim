@@ -162,6 +162,7 @@ endfunction
 
 " wrap to input block in advance
 function! operator#surround#wrap(rhs)
+    unlet! s:input
     let s:input = s:get_block_from_input('')
     return a:rhs
 endfunction
@@ -238,7 +239,6 @@ function! operator#surround#append(motion)
 
     if exists('s:input')
         let result = deepcopy(s:input)
-        unlet s:input
     else
         let result = s:get_block_from_input(a:motion)
     endif
@@ -374,7 +374,6 @@ function! operator#surround#replace(motion)
     " get input at first because of undo history
     if exists('s:input')
         let result = deepcopy(s:input)
-        unlet s:input
     else
         let result = s:get_block_from_input(a:motion)
     endif
