@@ -8,18 +8,7 @@ call operator#user#define('surround-replace', 'operator#surround#replace')
 
 nnoremap <Plug>(operator-surround-repeat) .
 
-" hack to input block in advance
-if get(g:, 'operator#surround#input_block_in_advance', 0)
-    function! s:wrap_operator_mapping(lhs)
-        for m in ['n', 'v']
-            let map = maparg(a:lhs, m)
-            if map !=# ''
-                execute m . 'noremap' '<expr><silent><script>' a:lhs 'operator#surround#wrap(' . string(map) . ')'
-            endif
-        endfor
-    endfunction
-    call s:wrap_operator_mapping('<Plug>(operator-surround-append)')
-    call s:wrap_operator_mapping('<Plug>(operator-surround-replace)')
-endif
+nmap <silent><expr><Plug>(operator-surround-append-input-in-advance) operator#surround#input_before("\<Plug>(operator-surround-append)")
+nmap <silent><expr><Plug>(operator-surround-replace-input-in-advance) operator#surround#input_before("\<Plug>(operator-surround-replace)")
 
 let g:loaded_operator_surround = 1

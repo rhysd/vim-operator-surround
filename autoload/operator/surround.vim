@@ -161,7 +161,7 @@ endfunction
 "   - add an option to escape for g:operator#surround#blocks
 
 " wrap to input block in advance
-function! operator#surround#wrap(rhs)
+function! operator#surround#input_before(rhs)
     unlet! s:input
     let s:input = s:get_block_from_input('')
     return a:rhs
@@ -239,6 +239,7 @@ function! operator#surround#append(motion)
 
     if exists('s:input')
         let result = deepcopy(s:input)
+        unlet s:input
     else
         let result = s:get_block_from_input(a:motion)
     endif
@@ -374,6 +375,7 @@ function! operator#surround#replace(motion)
     " get input at first because of undo history
     if exists('s:input')
         let result = deepcopy(s:input)
+        unlet s:input
     else
         let result = s:get_block_from_input(a:motion)
     endif
