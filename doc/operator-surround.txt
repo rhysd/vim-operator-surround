@@ -106,10 +106,10 @@ These mappings are for |mapmode-x| and |mapmode-n|.
 <Plug>(operator-surround-delete)              *<Plug>(operator-surround-delete)*
 
     Operator mapping to delete the surround in the text-object.  If the
-    text-object is a block defined in |g:operator#surround#blocks| like (hoge)
-    or if the text object's both ends are the same sequence like !?hoge!?, the
-    surrounds would be deleted.  For example, ( and ) for (hoge), !? and !?
-    for !?hoge!?.
+    text-object is a block defined in |g:operator#surround#blocks| like
+    '(hoge)' or if the text object's both ends are the same sequence like
+    '!?hoge!?', the surrounds would be deleted.  For example, '(' and ')' for
+    '(hoge)', '!?' and '!?' for '!?hoge!?'.
 
 <Plug>(operator-surround-replace)            *<Plug>(operator-surround-replace)*
 
@@ -144,9 +144,9 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
     \   ],
     \ }
 <
-    The keys of |g:operator#surround#blocks|('-' in above example) mean
+    The keys of |g:operator#surround#blocks| ('-' in above example) mean
     filetypes.  If you specify 'ruby', it means its blocks is available only
-    in Ruby sources.  '-' is a special key and it means its blocks is
+    in Ruby sources.  '-' is a special key and it means its blocks are
     available in any filetypes.
     The values of |g:operator#surround#blocks| represent block definitions.
     They are |Dictionary| and must have following keys; block, motionwise and
@@ -159,38 +159,38 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
       - motionwise
         Key motionwise represents that which kind of text object, the block is
         available.  'char' means characterwise, 'line' means linewise and
-        'block' means blockwise. In above example, () is used in all kinds of
-        objects.
+        'block' means blockwise. In above example, the block of ['(', ')'] is
+	used in all kinds of objects.
 
       - keys
         'keys' are input you specify in |<Plug>(operator-surround-append)|
         or |<Plug>(operator-surround-replace)|. If your input is equivalent to
         any of these values, the block is selected.  Length of input can be
-        more than 1.  In above example, if you input <Space>( , (  ) would be
-        selected.
+        more than 1.  In above example, if you input '<Space>(', the block of
+	['( ', ' )'] would be selected.
 
                                     *g:operator#surround#uses_input_if_no_block*
 g:operator#surround#uses_input_if_no_block
 
-    If the value is 1, use not only block definitions but also input sequence
-    when appending and replacing surrounds.  For example, if you input ! and
-    ! is not any keys in block definitions, the text-object would be
-    surrounded with !.
+    If the value is non-zero, use not only block definitions but also input
+    sequence when appending and replacing surrounds.  For example, if you
+    input ! and ! is not any keys in block definitions, the text-object would
+    be surrounded with !.
     The default value is 1.
 
                           *g:operator#surround#recognizes_both_ends_as_surround*
 g:operator#surround#recognizes_both_ends_as_surround
 
-    If the value is 1, if the both ends of the text-object are the same
+    If the value is non-zero, if the both ends of the text-object are a same
     sequence, the sequence is recognized as a surround.  For example, if
-    !?hoge!? is a text-object, both ends of sequence is the same sequence, !?.
-    Then it is recognized as surround.
+    '!?hoge!?' is a text-object, the both ends of it are the same sequence
+    '!?'.  Then it is recognized as a surround.
     The default value is 1.
 
 g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 
-    If the value is 1, do not change |g:operator#surround#blocks|.  If the
-    value is 0, |g:operator#surround#blocks| is merged with default block
+    If the value is non-zero, do not change |g:operator#surround#blocks|.  If
+    the value is 0, |g:operator#surround#blocks| is merged with the default block
     definitions at loading.
     The default block definitions are:
 >
@@ -215,7 +215,7 @@ g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 ==============================================================================
 SETUP EXAMPLE                                  *operator-surround-setup-example*
 
-Below is an example of setting for .vimrc. Note that these mappings overwrite
+Below is an example of setting for .vimrc.  Note that these mappings overwrite
 |s|.
 >
     " add ```...``` surround when filetype is markdown
@@ -251,12 +251,12 @@ Below is an example of setting for .vimrc. Note that these mappings overwrite
 ------------------------------------------------------------------------------
 |vim-surround| COMPATIBLE SETTING      *operator-surround-vim-surround-compatible*
 
-If you use |operator-surround| as an alternative to |vim-surround|. You may
+If you use |operator-surround| as an alternative to |vim-surround|.  You may
 want to use |operator-surround| with the same mappings as |vim-surround|.
-But I don't recommend this setting because the feature which
-|operator-surround| provides is not the one which |vim-surround| provides.
+But I don't recommend this setting because the feature of |operator-surround|
+is not the one of |vim-surround|.
 I think this setting can't take the advantage of |operator-surround|.  And note
-that these mappings overwrite some Vim's default mappings(for example, y in
+that these mappings overwrite some Vim's default mappings (for example, y in
 visual mode).
 >
     map <silent>ys <Plug>(operator-surround-append)
@@ -273,7 +273,7 @@ REPOSITORY PAGE                              *operator-surround-repository-page*
 The latest version of |operator-surround| is available at
 https://github.com/rhysd/vim-operator-surround
 
-Contributions (pull requests) are welcome. None of them are too short.
+Contributions (pull requests) are welcome.  None of them are too short.
 Especially, English check is very helpful because I'm poor at English :(
 
 
