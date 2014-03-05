@@ -57,11 +57,16 @@ repeatable with |.| without inputting key sequence again.
 ==============================================================================
 POLICY (or why I don't use |vim-surround|)              *operator-surround-policy*
 
-- Simplicity    : All should be done with operator mappings.
-- Extensibility : The behavior should be highly customizable with
-                  |g:operator#surround#blocks| and text objects like
-                  vim-textobj-multiblock, vim-textobj-between or
-                  vim-textobj-anyblock.
+- Simplicity
+
+    All should be done with operator mappings.
+
+- Extensibility
+
+    The behavior should be highly customizable with |g:operator#surround#blocks|
+    and text objects like vim-textobj-multiblock, vim-textobj-between or
+    vim-textobj-anyblock.
+
 - Well-tested
 
 c.f.
@@ -159,15 +164,15 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
       - motionwise
         Key motionwise represents that which kind of text object, the block is
         available.  'char' means characterwise, 'line' means linewise and
-        'block' means blockwise. In above example, the block of ['(', ')'] is
-	used in all kinds of objects.
+        'block' means blockwise. In above example, ['(', ')'] block is
+        used in all kinds of objects.
 
       - keys
         'keys' are input you specify in |<Plug>(operator-surround-append)|
         or |<Plug>(operator-surround-replace)|. If your input is equivalent to
         any of these values, the block is selected.  Length of input can be
-        more than 1.  In above example, if you input '<Space>(', the block of
-	['( ', ' )'] would be selected.
+        more than 1.  In above example, if you input '<Space>(', ['( ', ' )']
+        block would be selected.
 
                                     *g:operator#surround#uses_input_if_no_block*
 g:operator#surround#uses_input_if_no_block
@@ -181,7 +186,7 @@ g:operator#surround#uses_input_if_no_block
                           *g:operator#surround#recognizes_both_ends_as_surround*
 g:operator#surround#recognizes_both_ends_as_surround
 
-    If the value is non-zero, if the both ends of the text-object are a same
+    If the value is non-zero, if the both ends of the text-object are the same
     sequence, the sequence is recognized as a surround.  For example, if
     '!?hoge!?' is a text-object, the both ends of it are the same sequence
     '!?'.  Then it is recognized as a surround.
@@ -189,9 +194,9 @@ g:operator#surround#recognizes_both_ends_as_surround
 
 g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 
-    If the value is non-zero, do not change |g:operator#surround#blocks|.  If
-    the value is 0, |g:operator#surround#blocks| is merged with the default block
-    definitions at loading.
+    If the value is non-zero, default block definitions are not merged with
+    |g:operator#surround#blocks|.  If the value is 0, |g:operator#surround#blocks|
+    is merged with the default block definitions at loading.
     The default block definitions are:
 >
     \ {
@@ -216,7 +221,7 @@ g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 SETUP EXAMPLE                                  *operator-surround-setup-example*
 
 Below is an example of setting for .vimrc.  Note that these mappings overwrite
-|s|.
+|s| mapping.
 >
     " add ```...``` surround when filetype is markdown
     let g:operator#surround#blocks = {
@@ -304,4 +309,4 @@ LICENSE                                              *operator-surround-license*
 
 
 ==============================================================================
-vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:
+vim:tw=78:ts=8:ft=help:norl:et:fen:fdl=0:
