@@ -242,7 +242,7 @@ endfunction
 
 " delete {{{
 function! s:get_surround_in_with_filetype(filetype, region)
-    for b in g:operator#surround#blocks['-']
+    for b in g:operator#surround#blocks[a:filetype]
         " if the block surrounds the object
         if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
             return b.block
