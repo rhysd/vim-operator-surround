@@ -35,11 +35,15 @@ describe 'filetype specific settings'
         Expect getline(1) ==# 'do'
         Expect getline(2) ==# 'hoge'
         Expect getline(3) ==# 'end'
+        normal gg0vG$sd
+        Expect getline(1) ==# 'hoge'
     end
 
     it 'has higher priority than ''-'''
         Line "hoge"
         normal gg0saiw{
         Expect getline('.') ==# '{|i| hoge }'
+        normal gg0v$sd
+        Expect getline(1) ==# 'hoge'
     end
 end
