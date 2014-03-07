@@ -64,7 +64,7 @@ nmap <silent>srb <Plug>(operator-surround-replace)<Plug>(textobj-between-a)
 
 vim-operator-surround is distributed under MIT license.
 
-  Copyright (c) 2013 rhysd
+  Copyright (c) 2013-2014 rhysd
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the
