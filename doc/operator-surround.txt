@@ -30,27 +30,27 @@ Definitions of blocks are very customizable with |g:operator#surround#blocks|.
 ==============================================================================
 USAGE                                                  *operator-surround-usage*
 
-First, set |operator-surround-mappings| to your favorite mappings. These
+First, set |operator-surround-mappings| to your favorite mappings.  These
 mappings append/delete/replace the |text-objects| you specified.
 
 To append surrounds, use |<Plug>(operator-surround-append)|.  For example, if
-you maps it to |sa|, |saiw(| surrounds current inner word with ().  |iw| is a
+you map it to |sa|, |saiw(| surrounds current inner word with ().  |iw| is a
 text object for inner words.
 
 To delete surrounds, use |<Plug>(operator-surround-delete)|.  For example, if
-you maps it to |sd|, |sdiW| deletes a surround which is included in a word.
+you map it to |sd|, |sdiW| deletes a surround which is included in a word.
 >
     (hoge) -> hoge
 <
 To replace surrounds, use |<Plug>(operator-surround-replace)|.  For example,
-if you maps it to |sr|, |sriW'| replaces a surround which is included in a word
+if you map it to |sr|, |sriW'| replaces a surround which is included in a word
 with ''.
 >
     "hoge" -> 'hoge'
 <
 Default blocks are (), [], {}, <>, "", '', ``, (  ) and {  }.
 
-This plugin supports |vim-repeat|. If it is installed, all operations are
+This plugin supports |vim-repeat|.  If it is installed, all operations are
 repeatable with |.| without inputting key sequence again.
 
 
@@ -129,8 +129,8 @@ VARIABLES                                          *operator-surround-variables*
 
 g:operator#surround#blocks                          *g:operator#surround#blocks*
 
-    Block definitions. This is |Dictionary| of |List| whose elements represent
-    a block.  This value is merged with default definitions if you not specify
+    Block definitions.  This is |Dictionary| of |List| whose elements represent
+    a block.  This value is merged with default definitions if you do not specify
     |g:operator#surround#no_default_blocks|.
 
     For example, below is default definitions:
@@ -162,14 +162,14 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
         begin of it and the end of it.
 
       - motionwise
-        Key motionwise represents that which kind of text object, the block is
+        Key motionwise represents that which kind of a text object, the block is
         available.  'char' means characterwise, 'line' means linewise and
-        'block' means blockwise. In above example, ['(', ')'] block is
+        'block' means blockwise.  In above example, ['(', ')'] block is
         used in all kinds of objects.
 
       - keys
         'keys' are input you specify in |<Plug>(operator-surround-append)|
-        or |<Plug>(operator-surround-replace)|. If your input is equivalent to
+        or |<Plug>(operator-surround-replace)|.  If your input is equivalent to
         any of these values, the block is selected.  Length of input can be
         more than 1.  In above example, if you input '<Space>(', ['( ', ' )']
         block would be selected.
