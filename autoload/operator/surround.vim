@@ -132,7 +132,7 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
             " p and P can't insert linewise object in this case
             " because 1 line remains definitely and the line remains
             " after pasting.
-            return 'p`[k"_ddggVG"gy'
+            return 'p`[k"_ddggVGy'
         endif
         return line('$') == motion_end_line ? 'p' : 'P'
     else
@@ -266,12 +266,12 @@ function! s:get_surround_in(region)
 endfunction
 
 function! s:delete_surround(visual)
-    let save_reg_g = getreg('g')
-    let save_regtype_g = getregtype('g')
+    let save_reg_ = getreg('"')
+    let save_regtype_ = getregtype('"')
     try
-        call setreg('g', '', 'v')
-        call s:normal('`['.a:visual.'`]"gy')
-        let region = getreg('g')
+        call setreg('"', '', 'v')
+        call s:normal('`['.a:visual.'`]y')
+        let region = getreg('"')
 
         let block = s:get_surround_in(region)
         if block == []
@@ -299,33 +299,33 @@ function! s:delete_surround(visual)
         let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
         let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
 
-        call setreg('g', after, a:visual)
-        call s:normal('"g'.put_command)
+        call setreg('"', after, a:visual)
+        call s:normal(put_command)
     catch /^vim-operator-surround: /
         call s:echomsg('no block matches to the region', 'ErrorMsg')
     finally
-        call setreg('g', save_reg_g, save_regtype_g)
+        call setreg('"', save_reg_, save_regtype_)
     endtry
 endfunction
 
 function! s:delete_surrounds_in_block()
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, last_col, _] = getpos("']")
-    let save_reg_g = getreg('g')
-    let save_regtype_g = getregtype('g')
+    let save_reg_ = getreg('"')
+    let save_regtype_ = getregtype('"')
     try
         for line in range(start_line, last_line)
             " yank to set '[ and ']
             call s:normal(line.'gg')
             let end_of_line_col = last_col > col('$')-1 ? col('$')-1 : last_col
-            call s:normal(printf('%d|v%d|"gy', start_col, end_of_line_col))
+            call s:normal(printf('%d|v%d|y', start_col, end_of_line_col))
             call s:delete_surround('v')
         endfor
 
         " leave whole region as a history of buffer changes
-        call s:normal(printf("%dgg%d|\<C-v>`]\"gy", start_line, start_col))
+        call s:normal(printf("%dgg%d|\<C-v>`]\y", start_line, start_col))
     finally
-        call setreg('g', save_reg_g, save_regtype_g)
+        call setreg('"', save_reg_, save_regtype_)
     endtry
 endfunction
 
