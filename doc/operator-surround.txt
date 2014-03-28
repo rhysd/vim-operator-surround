@@ -188,8 +188,8 @@ g:operator#surround#keeps_input_if_no_block
 
     If the value is non-zero, keep input characters until block key is input
     when appending and replacing surrounds.  For example, if you input
-    'test(' and only '(' is key in block definitions, the text-object would
-    be surrounded with 'test(' and ')'.
+    'hoge(' and only '(' is a key in block definitions, the text-object would
+    be surrounded with 'hoge(' and ')'.
     If the value is non-zero, |g:operator#surround#uses_input_if_no_block|
     takes no effect.
     The default value is 0.
