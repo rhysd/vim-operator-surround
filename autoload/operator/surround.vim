@@ -39,6 +39,7 @@ if ! s:getg('no_default_blocks', 0)
 endif
 
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
+let g:operator#surround#keeps_input_if_no_block = s:getg('keeps_input_if_no_block', 0)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
 " }}}
 " input {{{
@@ -51,9 +52,20 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
             elseif filter(copy(b.keys), 'v:val =~# "^\\V'.escape(a:input, '"').'"') != []
                 " prefix matching
                 return 1
+            elseif g:operator#surround#keeps_input_if_no_block
+                for key in b.keys
+                    let idx = stridx(a:input, key)
+                    if idx >= 0
+                        return [strpart(a:input, 0, idx) . b.block[0], b.block[1]]
+                    endif
+                endfor
             endif
         endif
     endfor
+    if g:operator#surround#keeps_input_if_no_block
+        echon strpart(a:input, strlen(a:input) - 1, 1)
+        return 1
+    endif
     return 0
 endfunction
 
@@ -74,7 +86,11 @@ function! s:get_block_or_prefix_match(input, motion)
 endfunction
 
 function! s:get_block_from_input(motion)
-    echon 'block : '
+    if ! g:operator#surround#keeps_input_if_no_block
+        echon 'block : '
+    else
+        echon 'chars & block : '
+    endif
     let input = ''
     while 1
         let char = getchar()
