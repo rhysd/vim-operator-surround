@@ -183,8 +183,8 @@ g:operator#surround#uses_input_if_no_block
     be surrounded with !.
     The default value is 1.
 
-                                    *g:operator#surround#keeps_input_if_no_block*
-g:operator#surround#keeps_input_if_no_block
+                                     *g:operator#surround#enable_xbrackets_mode*
+g:operator#surround#enable_xbrackets_mode
 
     If the value is non-zero, keep input characters until block key is input
     when appending and replacing surrounds.  For example, if you input
