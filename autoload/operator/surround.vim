@@ -266,8 +266,8 @@ function! s:get_surround_in(region)
 endfunction
 
 function! s:delete_surround(visual)
-    let save_reg_g = getreg('g')
-    let save_regtype_g = getregtype('g')
+    let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
+    let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
     try
         call setreg('g', '', 'v')
         call s:normal('`['.a:visual.'`]"gy')
@@ -305,14 +305,15 @@ function! s:delete_surround(visual)
         call s:echomsg('no block matches to the region', 'ErrorMsg')
     finally
         call setreg('g', save_reg_g, save_regtype_g)
+        call setreg('"', save_reg_unnamed, save_regtype_unnamed)
     endtry
 endfunction
 
 function! s:delete_surrounds_in_block()
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, last_col, _] = getpos("']")
-    let save_reg_g = getreg('g')
-    let save_regtype_g = getregtype('g')
+    let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
+    let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
     try
         for line in range(start_line, last_line)
             " yank to set '[ and ']
@@ -326,6 +327,7 @@ function! s:delete_surrounds_in_block()
         call s:normal(printf("%dgg%d|\<C-v>`]\"gy", start_line, start_col))
     finally
         call setreg('g', save_reg_g, save_regtype_g)
+        call setreg('"', save_reg_unnamed, save_regtype_unnamed)
     endtry
 endfunction
 

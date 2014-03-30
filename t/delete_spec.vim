@@ -138,6 +138,17 @@ describe '<Plug>(operator-surround-delete)'
 
         let &selection = selection
     end
+
+    it 'does not pollute unnamed registers'
+        call setreg('"', 'vim kawaii', 'v')
+        Line "hoge \"'[<({huga})>]'\" piyo"
+        normal! gg0ww
+        normal siWw
+
+        Expect getreg('"') ==# 'vim kawaii'
+        Expect getregtype('"') ==# 'v'
+    end
+
     " }}}
 
 end
