@@ -53,6 +53,21 @@ describe 'Default settings'
 
         Expect 'g:operator#surround#uses_input_if_no_block' to_exist_and_default_to 1
         Expect 'g:operator#surround#recognizes_both_ends_as_surround' to_exist_and_default_to 1
+
+        Expect g:operator#surround#default_blocks ==
+                \ {
+                \   '-' : [
+                \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
+                \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
+                \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
+                \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
+                \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
+                \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
+                \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
+                \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
+                \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+                \   ],
+                \ }
     end
 
     it 'provide functions to make operator'
@@ -67,5 +82,8 @@ describe 'Default settings'
         Expect maparg('<Plug>(operator-surround-delete)') not to_be_empty
     end
 
+    it 'can''t change the default blocks'
+        Expect 'let g:operator#surround#default_blocks.a = 0' to_throw_exception
+    end
 end
 
