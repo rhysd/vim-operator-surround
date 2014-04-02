@@ -8,19 +8,7 @@ endfunction
 
 let g:operator#surround#blocks = s:getg('blocks', {})
 
-if ! s:getg('no_default_blocks', 0)
-
-    function! s:merge(d1, d2)
-        for [k, v] in items(a:d2)
-            if has_key(a:d1, k)
-                call extend(a:d1[k], v)
-            else
-                let a:d1[k] = v
-            endif
-        endfor
-    endfunction
-
-    call s:merge( g:operator#surround#blocks,
+let g:operator#surround#default_blocks =
                 \ {
                 \   '-' : [
                 \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
@@ -33,7 +21,22 @@ if ! s:getg('no_default_blocks', 0)
                 \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
                 \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
                 \   ],
-                \ } )
+                \ }
+lockvar! g:operator#surround#default_blocks
+
+if ! s:getg('no_default_blocks', 0)
+
+    function! s:merge(d1, d2)
+        for [k, v] in items(a:d2)
+            if has_key(a:d1, k)
+                call extend(a:d1[k], v)
+            else
+                let a:d1[k] = v
+            endif
+        endfor
+    endfunction
+
+    call s:merge( g:operator#surround#blocks, g:operator#surround#default_blocks)
 
     delfunction s:merge
 endif
