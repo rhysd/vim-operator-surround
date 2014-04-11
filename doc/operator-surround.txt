@@ -36,7 +36,9 @@ mappings append/delete/replace the |text-objects| you specified.
 To append surrounds, use |<Plug>(operator-surround-append)|.  For example, if
 you map it to |sa|, |saiw(| surrounds current inner word with ().  |iw| is a
 text object for inner words.
-
+>
+    hoge -> (hoge)
+<
 To delete surrounds, use |<Plug>(operator-surround-delete)|.  For example, if
 you map it to |sd|, |sdiW| deletes a surround which is included in a word.
 >
