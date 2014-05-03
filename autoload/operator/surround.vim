@@ -167,7 +167,12 @@ function! s:surround_characters(block_begin, block_end)
     " Update `> and `<
     call s:normal("`[v`]\<Esc>")
     " insert block to the region
-    call s:normal(printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_end, a:block_begin))
+    call s:normal("`>")
+    call search('\S', 'bcW')
+    call s:normal(printf("a%s\<Esc>", a:block_end))
+    call s:normal("`<")
+    call search('\S', 'cW')
+    call s:normal(printf("i%s\<Esc>", a:block_begin))
 endfunction
 
 function! s:surround_lines(block_begin, block_end)
