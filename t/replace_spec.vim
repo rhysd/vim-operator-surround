@@ -43,6 +43,16 @@ describe '<Plug>(operator-surround-replace)'
         normal va[s )
         Expect getline('.') ==# '( hoge )'
     end
+
+    it 'skips whitespaces (fixes issue #13)'
+        Line "hoge('aaa' , 'bbb')"
+        normal! gg0fb
+        normal sa'"
+        Expect getline('.') ==# "hoge('aaa' , \"bbb\")"
+        normal Fa
+        normal sa'"
+        Expect getline('.') ==# "hoge(\"aaa\" , \"bbb\")"
+    end
     " }}}
 
     " linewise {{{
