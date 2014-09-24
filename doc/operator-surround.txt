@@ -52,9 +52,6 @@ with ''.
 <
 Default blocks are (), [], {}, <>, "", '', ``, (  ) and {  }.
 
-This plugin supports |vim-repeat|.  If it is installed, all operations are
-repeatable with |.| without inputting key sequence again.
-
 
 ==============================================================================
 POLICY (or why I don't use |vim-surround|)              *operator-surround-policy*
@@ -93,9 +90,6 @@ DEPENDENCY                                        *operator-surround-dependency*
 
 |operator-user| (requried)
     https://github.com/kana/vim-operator-user
-
-|vim-repeat| (recommended)
-    https://github.com/tpope/vim-repeat
 
 
 ==============================================================================
