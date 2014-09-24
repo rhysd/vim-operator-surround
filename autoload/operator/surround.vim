@@ -92,10 +92,10 @@ function! s:get_block_from_input(motion)
         let input .= char
         let result = s:get_block_or_prefix_match(input, a:motion)
         if type(result) == type([])
-            return [input, result]
+            return result
         elseif ! result
             if g:operator#surround#uses_input_if_no_block
-                return [input, [input, input]]
+                return [input, input]
             else
                 call s:echomsg(input . ' is not defined. Please check g:operator#surround#blocks.', 'ErrorMsg')
                 return 0
@@ -143,19 +143,27 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
     endif
 endfunction
 
-" wrapper for repeat#set()
-function! s:repeat_set(input, count)
-    if ! exists('s:has_repeat_set')
-        try
-            call repeat#set("\<Plug>(operator-surround-repeat)".a:input, a:count)
-            let s:has_repeat_set = 1
-        catch /^Vim\%((\a\+)\)\=:E117/
-            let s:has_repeat_set = 0
-        endtry
-    elseif s:has_repeat_set
-        call repeat#set("\<Plug>(operator-surround-repeat)".a:input, a:count)
+" handle required information
+function! s:get_info(name)
+    if !exists('b:operator_surround')
+        let b:operator_surround = {}
+        let b:operator_surround.state = 0
+        let b:operator_surround.block = ''
     endif
+    return b:operator_surround[a:name]
 endfunction
+
+function! s:set_info(name, value)
+    if !exists('b:operator_surround')
+        call s:get_info('state')
+    endif
+    let b:operator_surround[a:name] = a:value
+endfunction
+
+function! operator#surround#certify_as_keymapping()
+    call s:set_info('state', 1)
+endfunction
+
 " }}}
 
 " TODO
@@ -236,15 +244,17 @@ function! operator#surround#append(motion)
         return
     endif
 
-    let result = s:get_block_from_input(a:motion)
+    let state  = s:get_info('state')
+    let result = state ? s:get_block_from_input(a:motion) : s:get_info('block')
     if type(result) == type(0) && ! result
         return
     endif
-    let [input, block] = result
+    let block = result
 
     call s:append_block(block, a:motion)
 
-    call s:repeat_set(input, v:count)
+    call s:set_info('state', 0)
+    call s:set_info('block', block)
 endfunction
 " }}}
 
@@ -368,16 +378,18 @@ endfunction
 " replace {{{
 function! operator#surround#replace(motion)
     " get input at first because of undo history
-    let result = s:get_block_from_input(a:motion)
+    let state  = s:get_info('state')
+    let result = state ? s:get_block_from_input(a:motion) : s:get_info('block')
     if type(result) == type(0) && ! result
         return
     endif
-    let [input, block] = result
+    let block = result
 
     call operator#surround#delete(a:motion)
     call s:append_block(block, a:motion)
 
-    call s:repeat_set(input, v:count)
+    call s:set_info('state', 0)
+    call s:set_info('block', block)
 endfunction
 " }}}
 
