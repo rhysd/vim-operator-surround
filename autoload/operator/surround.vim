@@ -164,6 +164,18 @@ function! operator#surround#certify_as_keymapping()
     call s:set_info('state', 1)
 endfunction
 
+" check whether the target region should be extended to each end of lines or not.
+function! s:is_extended_blockwise_visual()
+    if getpos("'[")[0:2] == getpos("'<")[0:2] && getpos("']")[0:2] == getpos("'>")[0:2]
+        normal! gv
+        let is_extended = winsaveview().curswant == 1/0
+        execute "normal! \<Esc>"
+    else
+        let is_extended = 0
+    endif
+    return is_extended
+endfunction
+
 " }}}
 
 " TODO
@@ -196,11 +208,12 @@ endfunction
 function! s:surround_blocks(block_begin, block_end)
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, end_col, _] = getpos("']")
+    let is_extended = s:is_extended_blockwise_visual()
     for line in range(start_line, last_line)
         " insert block to the one line in the block region
         call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
                     \        line,
-                    \        end_col,
+                    \        is_extended ? col([line, '$']) : end_col,
                     \        a:block_end,
                     \        start_col,
                     \        a:block_begin)
@@ -332,17 +345,18 @@ function! s:delete_surrounds_in_block()
     let [_, last_line, last_col, _] = getpos("']")
     let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
     let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
+    let is_extended = s:is_extended_blockwise_visual()
     try
         for line in range(start_line, last_line)
             " yank to set '[ and ']
             call s:normal(line.'gg')
-            let end_of_line_col = last_col > col('$')-1 ? col('$')-1 : last_col
+            let end_of_line_col = last_col > col('$')-1 || is_extended ? col('$')-1 : last_col
             call s:normal(printf('%d|v%d|"gy', start_col, end_of_line_col))
             call s:delete_surround('v')
         endfor
 
         " leave whole region as a history of buffer changes
-        call s:normal(printf("%dgg%d|\<C-v>`]\"gy", start_line, start_col))
+        call s:normal(printf("%dgg%d|\<C-v>`]%s\"gy", start_line, start_col, is_extended ? '$' : ''))
     finally
         call setreg('g', save_reg_g, save_regtype_g)
         call setreg('"', save_reg_unnamed, save_regtype_unnamed)
