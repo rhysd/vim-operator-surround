@@ -53,6 +53,7 @@ describe 'Default settings'
 
         Expect 'g:operator#surround#uses_input_if_no_block' to_exist_and_default_to 1
         Expect 'g:operator#surround#recognizes_both_ends_as_surround' to_exist_and_default_to 1
+        Expect 'g:operator#surround#ignore_space_on_append' to_exist_and_default_to 0
 
         Expect g:operator#surround#default_blocks ==
                 \ {

@@ -105,6 +105,13 @@ describe '<Plug>(operator-surround-append)'
         Expect "([{<\"'`hoge`'\">}]) huga poyo" to_be_current_line
         echon ' '
     end
+
+    it 'does not ignore spaces both side of the block.'
+        Line "'   foo   bar   baz   '"
+        normal! gg0ff
+        normal si'(
+        Expect "'(   foo   bar   baz   )'" to_be_current_line
+    end
     " }}}
 
     " linewise {{{

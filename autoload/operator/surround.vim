@@ -43,6 +43,7 @@ endif
 
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
+let g:operator#surround#ignore_space_on_append = s:getg('ignore_space_on_append', 0)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
@@ -171,15 +172,19 @@ endfunction
 "   - add an option to escape for g:operator#surround#blocks
 
 " append {{{
-function! s:surround_characters(block_begin, block_end)
+function! s:surround_characters(block_begin, block_end, ignore_space)
     " Update `> and `<
     call s:normal("`[v`]\<Esc>")
     " insert block to the region
     call s:normal("`>")
-    call search('\S', 'bcW')
+    if a:ignore_space
+        call search('\S', 'bcW')
+    endif
     call s:normal(printf("a%s\<Esc>", a:block_end))
     call s:normal("`<")
-    call search('\S', 'cW')
+    if a:ignore_space
+        call search('\S', 'cW')
+    endif
     call s:normal(printf("i%s\<Esc>", a:block_begin))
 endfunction
 
@@ -208,7 +213,7 @@ function! s:surround_blocks(block_begin, block_end)
     endfor
 endfunction
 
-function! s:append_block(block_pair, motion)
+function! s:append_block(block_pair, motion, ignore_space)
     let pos_save = getpos('.')
     let autoindent_save = &autoindent
     let cindent_save = &cindent
@@ -221,7 +226,7 @@ function! s:append_block(block_pair, motion)
 
     try
         if a:motion ==# 'char'
-            call s:surround_characters(a:block_pair[0], a:block_pair[1])
+            call s:surround_characters(a:block_pair[0], a:block_pair[1], a:ignore_space)
         elseif a:motion ==# 'line'
             call s:surround_lines(a:block_pair[0], a:block_pair[1])
         elseif a:motion ==# 'block'
@@ -251,7 +256,7 @@ function! operator#surround#append(motion)
     endif
     let block = result
 
-    call s:append_block(block, a:motion)
+    call s:append_block(block, a:motion, g:operator#surround#ignore_space_on_append)
 
     call s:set_info('state', 0)
     call s:set_info('block', block)
@@ -386,7 +391,7 @@ function! operator#surround#replace(motion)
     let block = result
 
     call operator#surround#delete(a:motion)
-    call s:append_block(block, a:motion)
+    call s:append_block(block, a:motion, 1)
 
     call s:set_info('state', 0)
     call s:set_info('block', block)
