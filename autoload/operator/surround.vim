@@ -20,6 +20,7 @@ let g:operator#surround#default_blocks =
                 \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
                 \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
                 \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+                \       { 'block' : ['$', '$'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['d'] },
                 \   ],
                 \ }
 lockvar! g:operator#surround#default_blocks
@@ -213,7 +214,7 @@ function! s:surround_blocks(block_begin, block_end)
     endfor
 endfunction
 
-function! s:append_block(block_pair, motion)
+function! s:append_block(block_pair, motion) abort
     let pos_save = getpos('.')
     let autoindent_save = &autoindent
     let cindent_save = &cindent
@@ -292,7 +293,7 @@ function! s:get_surround_in(region)
     endif
 endfunction
 
-function! s:get_same_str_surround(region)
+function! s:get_same_str_surround(region) abort
     if g:operator#surround#ignore_space
         let region = matchstr(a:region, '^[[:space:]\n]*\zs.*\ze[[:space:]\n]*$')
     else
@@ -316,7 +317,7 @@ function! s:get_same_str_surround(region)
     return [surround, surround]
 endfunction
 
-function! s:delete_surround(visual)
+function! s:delete_surround(visual) abort
     let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
     let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
     try
@@ -377,7 +378,7 @@ function! s:delete_surrounds_in_block()
     endtry
 endfunction
 
-function! operator#surround#delete(motion)
+function! operator#surround#delete(motion) abort
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
     endif
