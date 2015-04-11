@@ -36,14 +36,14 @@ if ! s:getg('no_default_blocks', 0)
         endfor
     endfunction
 
-    call s:merge( g:operator#surround#blocks, g:operator#surround#default_blocks)
+    call s:merge(g:operator#surround#blocks, g:operator#surround#default_blocks)
 
     delfunction s:merge
 endif
 
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
-let g:operator#surround#ignore_space_on_append = s:getg('ignore_space_on_append', 0)
+let g:operator#surround#ignore_space = s:getg('ignore_space', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
@@ -172,17 +172,17 @@ endfunction
 "   - add an option to escape for g:operator#surround#blocks
 
 " append {{{
-function! s:surround_characters(block_begin, block_end, ignore_space)
+function! s:surround_characters(block_begin, block_end)
     " Update `> and `<
     call s:normal("`[v`]\<Esc>")
     " insert block to the region
     call s:normal("`>")
-    if a:ignore_space
+    if g:operator#surround#ignore_space
         call search('\S', 'bcW')
     endif
     call s:normal(printf("a%s\<Esc>", a:block_end))
     call s:normal("`<")
-    if a:ignore_space
+    if g:operator#surround#ignore_space
         call search('\S', 'cW')
     endif
     call s:normal(printf("i%s\<Esc>", a:block_begin))
@@ -213,7 +213,7 @@ function! s:surround_blocks(block_begin, block_end)
     endfor
 endfunction
 
-function! s:append_block(block_pair, motion, ignore_space)
+function! s:append_block(block_pair, motion)
     let pos_save = getpos('.')
     let autoindent_save = &autoindent
     let cindent_save = &cindent
@@ -226,7 +226,7 @@ function! s:append_block(block_pair, motion, ignore_space)
 
     try
         if a:motion ==# 'char'
-            call s:surround_characters(a:block_pair[0], a:block_pair[1], a:ignore_space)
+            call s:surround_characters(a:block_pair[0], a:block_pair[1])
         elseif a:motion ==# 'line'
             call s:surround_lines(a:block_pair[0], a:block_pair[1])
         elseif a:motion ==# 'block'
@@ -256,7 +256,7 @@ function! operator#surround#append(motion)
     endif
     let block = result
 
-    call s:append_block(block, a:motion, g:operator#surround#ignore_space_on_append)
+    call s:append_block(block, a:motion)
 
     call s:set_info('state', 0)
     call s:set_info('block', block)
@@ -265,9 +265,13 @@ endfunction
 
 " delete {{{
 function! s:get_surround_in_with_filetype(filetype, region)
+    let space_skipper = g:operator#surround#ignore_space
+                \ ? '\[[:space:]\n]\*'
+                \ : '\n\*'
+
     for b in g:operator#surround#blocks[a:filetype]
         " if the block surrounds the object
-        if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
+        if match(a:region, printf('^\V%s%s\.\*%s%s\$', space_skipper, b.block[0], b.block[1], space_skipper)) >= 0
             return b.block
         endif
     endfor
@@ -288,6 +292,30 @@ function! s:get_surround_in(region)
     endif
 endfunction
 
+function! s:get_same_str_surround(region)
+    if g:operator#surround#ignore_space
+        let region = matchstr(a:region, '^[[:space:]\n]*\zs.*\ze[[:space:]\n]*$')
+    else
+        let region = matchstr(a:region, '^\n*\zs.*\ze\n*$')
+    endif
+
+    let len = strlen(region)
+
+    let [s, e] = [0, len - 1]
+
+    while region[s] ==# region[e] && s < len && e >= 0
+        let s += 1
+        let e -= 1
+    endwhile
+
+    if s == 0
+        throw 'vim-operator-surround: block is not found'
+    endif
+
+    let surround = region[ : s - 1]
+    return [surround, surround]
+endfunction
+
 function! s:delete_surround(visual)
     let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
     let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
@@ -302,16 +330,7 @@ function! s:delete_surround(visual)
                 throw 'vim-operator-surround: block is not found'
             endif
 
-            " get the characters at both end
-            "   Note: Use old regex engine because NFA engine has trouble with
-            "   backward reference
-            let matchedlist = matchlist(region, (exists('+regexpengine') ? '\%#=1' : '').'^\s*\(\S\+\)\_.*\1\s*$')
-
-            if len(matchedlist) > 1
-                let block = [matchedlist[1], matchedlist[1]]
-            else
-                throw 'vim-operator-surround: block is not found'
-            endif
+            let block = s:get_same_str_surround(region)
         endif
 
         let put_command = s:get_paste_command(a:visual, [getpos("'[")[1:2], getpos("']")[1:2]], len(getline("']")))
@@ -319,8 +338,12 @@ function! s:delete_surround(visual)
         call s:normal('`['.a:visual.'`]"_d')
 
         " remove the former block and latter block
-        let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
-        let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
+        let space_skipper = g:operator#surround#ignore_space
+                    \ ? '\[[:space:]\n]\*'
+                    \ : '\n\*'
+
+        let after = substitute(region, '^\V'. space_skipper . '\zs' . block[0], '', '')
+        let after = substitute(after, '\V' . block[1] . '\ze' . space_skipper . '\$', '', '')
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
@@ -391,7 +414,7 @@ function! operator#surround#replace(motion)
     let block = result
 
     call operator#surround#delete(a:motion)
-    call s:append_block(block, a:motion, 1)
+    call s:append_block(block, a:motion)
 
     call s:set_info('state', 0)
     call s:set_info('block', block)

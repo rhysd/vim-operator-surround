@@ -106,11 +106,23 @@ describe '<Plug>(operator-surround-append)'
         echon ' '
     end
 
-    it 'does not ignore spaces both side of the block.'
+    it 'does not ignore spaces both side of the block when g:operator#surround#ignore_space is 0.'
+        let saved = g:operator#surround#ignore_space
+        let g:operator#surround#ignore_space = 0
+
         Line "'   foo   bar   baz   '"
         normal! gg0ff
         normal si'(
         Expect "'(   foo   bar   baz   )'" to_be_current_line
+
+        let g:operator#surround#ignore_space = saved
+    end
+
+    it 'ignore spaces both side of the block.'
+        Line "'   foo   bar   baz   '"
+        normal! gg0ff
+        normal si'(
+        Expect "'   (foo   bar   baz)   '" to_be_current_line
     end
     " }}}
 
