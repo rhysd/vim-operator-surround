@@ -39,6 +39,7 @@ describe 'Default settings'
                 \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
                 \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
                 \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+                \       { 'block' : ['$', '$'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['d'] },
                 \   ],
                 \ }
         for [_, ft] in items(g:operator#surround#blocks)
@@ -67,6 +68,7 @@ describe 'Default settings'
                 \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
                 \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
                 \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+                \       { 'block' : ['$', '$'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['d'] },
                 \   ],
                 \ }
     end
