@@ -20,7 +20,6 @@ let g:operator#surround#default_blocks =
                 \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
                 \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
                 \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
-                \       { 'block' : ['$', '$'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['d'] },
                 \   ],
                 \ }
 lockvar! g:operator#surround#default_blocks
