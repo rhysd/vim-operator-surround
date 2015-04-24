@@ -24,7 +24,7 @@ describe '.'
     end
 
     it 'repeats appending surrounds to the same object'
-        SKIP because it doesn't work properly only in vspec environment
+        SKIP "because it doesn't work properly only in vspec environment"
         Line "hoge"
         normal saiw(l
         normal .(l
@@ -36,7 +36,7 @@ describe '.'
     end
 
     it 'repeats deleting surrounds to the same object'
-        SKIP because it doesn't work properly only in vspec environment
+        SKIP "because it doesn't work properly only in vspec environment"
         Line  "((((hoge))))"
         normal fhsda(
         normal .
@@ -48,7 +48,7 @@ describe '.'
     end
 
     it 'repeats replacing surrounds to the same object'
-        SKIP because it doesn't work properly only in vspec environment
+        SKIP "because it doesn't work properly only in vspec environment"
         Line  "(hoge)"
         normal sriW{
         normal! ggfh
