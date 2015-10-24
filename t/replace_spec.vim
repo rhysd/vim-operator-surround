@@ -143,4 +143,17 @@ describe '<Plug>(operator-surround-replace)'
     end
     " }}}
 
+    " issue fixes {{{
+    it 'ensures to fix #23'
+        Line "aaa '' bbb"
+
+        execute 'normal' "gg0f'sa'{"
+        Expect getline(1) ==# "aaa { }bbb"
+
+        Line "aaa '   ' bbb"
+
+        execute 'normal' "gg0f'sa'{"
+        Expect getline(1) ==# "aaa {    }bbb"
+    end
+    " }}}
 end
