@@ -171,18 +171,45 @@ endfunction
 " - escape string when the surround is "" or ''
 "   - add an option to escape for g:operator#surround#blocks
 
+function! s:is_ordered(pos1, pos2)
+    if a:pos1[1] != a:pos2[1]
+        return a:pos1[1] < a:pos2[1]
+    endif
+
+    return a:pos1[2] <= a:pos2[2]
+endfunction
+
 " append {{{
+
+" Check it should skip white spaces.
+" If srounded object consists of white spaces only,
+" skipping white spaces doesn't work.
+function! s:should_skip_spaces()
+    let sel_save = &l:selection
+    let [save_g_reg, save_g_regtype] = [getreg('g'), getregtype('g')]
+    try
+        let &l:selection = 'inclusive'
+
+        " Update `> and `<
+        call s:normal("`[v`]\"gy")
+
+        return g:operator#surround#ignore_space &&
+                    \ getreg('g') !~# '^[[:space:]\n]*$'
+    finally
+        call setreg('g', save_g_reg, save_g_regtype)
+        let &l:selection = sel_save
+    endtry
+endfunction
 function! s:surround_characters(block_begin, block_end)
-    " Update `> and `<
-    call s:normal("`[v`]\<Esc>")
+    let should_skip_spaces = s:should_skip_spaces()
     " insert block to the region
     call s:normal("`>")
-    if g:operator#surround#ignore_space
+    if should_skip_spaces
         call search('\S', 'bcW')
     endif
     call s:normal(printf("a%s\<Esc>", a:block_end))
     call s:normal("`<")
-    if g:operator#surround#ignore_space
+    if should_skip_spaces
         call search('\S', 'cW')
     endif
     call s:normal(printf("i%s\<Esc>", a:block_begin))
