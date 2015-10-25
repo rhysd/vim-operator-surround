@@ -171,14 +171,6 @@ endfunction
 " - escape string when the surround is "" or ''
 "   - add an option to escape for g:operator#surround#blocks
 
-function! s:is_ordered(pos1, pos2)
-    if a:pos1[1] != a:pos2[1]
-        return a:pos1[1] < a:pos2[1]
-    endif
-
-    return a:pos1[2] <= a:pos2[2]
-endfunction
-
 " append {{{
 
 " Check it should skip white spaces.

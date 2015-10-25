@@ -217,6 +217,12 @@ g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 <
     The default value is 0.
 
+g:operator#surround#ignore_space              *g:operator#surround#ignore_space*
+
+    If the value is non-zero, surroundings ignores white spaces when they are
+    added with <Plug>(operator-surround-append) or
+    <Plug>(operator-surround-replace).
+    The default value is 1.
 
 
 ==============================================================================
