@@ -146,19 +146,19 @@ endfunction
 
 " handle required information
 function! s:get_info(name)
-    if !exists('b:operator_surround')
-        let b:operator_surround = {}
-        let b:operator_surround.state = 0
-        let b:operator_surround.block = ''
+    if !exists('g:operator_surround')
+        let g:operator_surround = {}
+        let g:operator_surround.state = 0
+        let g:operator_surround.block = ''
     endif
-    return b:operator_surround[a:name]
+    return g:operator_surround[a:name]
 endfunction
 
 function! s:set_info(name, value)
-    if !exists('b:operator_surround')
+    if !exists('g:operator_surround')
         call s:get_info('state')
     endif
-    let b:operator_surround[a:name] = a:value
+    let g:operator_surround[a:name] = a:value
 endfunction
 
 function! operator#surround#certify_as_keymapping()
