@@ -167,13 +167,12 @@ endfunction
 
 " check whether the target region should be extended to each end of lines or not.
 function! s:is_extended_blockwise_visual()
-    if getpos("'[")[0:2] == getpos("'<")[0:2] && getpos("']")[0:2] == getpos("'>")[0:2]
-        normal! gv
-        let is_extended = winsaveview().curswant == 1/0
-        execute "normal! \<Esc>"
-    else
-        let is_extended = 0
+    if getpos("'[")[0:2] != getpos("'<")[0:2] || getpos("']")[0:2] != getpos("'>")[0:2]
+        return 0
     endif
+    normal! gv
+    let is_extended = winsaveview().curswant == 1/0
+    execute "normal! \<Esc>"
     return is_extended
 endfunction
 
