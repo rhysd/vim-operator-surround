@@ -63,7 +63,8 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
         endif
     endfor
     if g:operator#surround#enable_xbrackets_mode
-        echon strpart(a:input, strlen(a:input) - 1, 1)
+        " echon strpart(a:input, strlen(a:input) - 1, 1)
+        echo 'block (xbrackets) : '.a:input
         return 1
     endif
     return 0
@@ -95,6 +96,11 @@ function! s:get_block_from_input(motion)
     while 1
         let char = getchar()
         let char = type(char) == type(0) ? nr2char(char) : char
+
+        if char == "\<BS>"
+          let input = strpart(input, 0, strlen(input) - 1)
+          let char = ''
+        endif
 
         " cancel when <C-c> or <Esc> is input
         if char == "\<C-c>" || char == "\<Esc>"
