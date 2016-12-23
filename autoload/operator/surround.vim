@@ -48,6 +48,9 @@ let g:operator#surround#ignore_space = s:getg('ignore_space', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
+    if g:operator#surround#enable_xbrackets_mode
+        echo 'block (xbrackets) : '.a:input
+    endif
     for b in g:operator#surround#blocks[a:filetype]
         if index(b.motionwise, a:motion) >= 0
             if index(b.keys, a:input) >= 0
@@ -63,14 +66,10 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
                         return [strpart(a:input, 0, idx) . b.block[0], b.block[1]]
                     endif
                 endfor
+                return 1
             endif
         endif
     endfor
-    if g:operator#surround#enable_xbrackets_mode
-        " echon strpart(a:input, strlen(a:input) - 1, 1)
-        echo 'block (xbrackets) : '.a:input
-        return 1
-    endif
     return 0
 endfunction
 
