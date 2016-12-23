@@ -43,6 +43,28 @@ describe '<Plug>(operator-surround-replace)'
         normal va[s )
         Expect getline('.') ==# '( hoge )'
     end
+
+    it 'skips whitespaces (fixes issue #13)'
+        Line "hoge('aaa' , 'bbb')"
+        normal! gg0fb
+        normal sa'"
+        Expect getline('.') ==# "hoge('aaa' , \"bbb\")"
+        normal Fa
+        normal sa'"
+        Expect getline('.') ==# "hoge(\"aaa\" , \"bbb\")"
+    end
+
+    it 'does not skip whitespaces if g:operator#surround#ignore_space is 0'
+        let saved = g:operator#surround#ignore_space
+        let g:operator#surround#ignore_space = 0
+
+        Line "( {abc} )"
+        normal! gg0fb
+        normal si("
+        Expect getline('.') ==# "(\"{abc}\")"
+
+        let g:operator#surround#ignore_space = saved
+    end
     " }}}
 
     " linewise {{{
@@ -121,4 +143,17 @@ describe '<Plug>(operator-surround-replace)'
     end
     " }}}
 
+    " issue fixes {{{
+    it 'ensures to fix #23'
+        Line "aaa '' bbb"
+
+        execute 'normal' "gg0f'sa'{"
+        Expect getline(1) ==# "aaa { }bbb"
+
+        Line "aaa '   ' bbb"
+
+        execute 'normal' "gg0f'sa'{"
+        Expect getline(1) ==# "aaa {    }bbb"
+    end
+    " }}}
 end

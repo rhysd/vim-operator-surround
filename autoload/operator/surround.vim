@@ -8,19 +8,7 @@ endfunction
 
 let g:operator#surround#blocks = s:getg('blocks', {})
 
-if ! s:getg('no_default_blocks', 0)
-
-    function! s:merge(d1, d2)
-        for [k, v] in items(a:d2)
-            if has_key(a:d1, k)
-                call extend(a:d1[k], v)
-            else
-                let a:d1[k] = v
-            endif
-        endfor
-    endfunction
-
-    call s:merge( g:operator#surround#blocks,
+let g:operator#surround#default_blocks =
                 \ {
                 \   '-' : [
                 \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
@@ -33,7 +21,22 @@ if ! s:getg('no_default_blocks', 0)
                 \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
                 \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
                 \   ],
-                \ } )
+                \ }
+lockvar! g:operator#surround#default_blocks
+
+if ! s:getg('no_default_blocks', 0)
+
+    function! s:merge(d1, d2)
+        for [k, v] in items(a:d2)
+            if has_key(a:d1, k)
+                call extend(a:d1[k], v)
+            else
+                let a:d1[k] = v
+            endif
+        endfor
+    endfunction
+
+    call s:merge(g:operator#surround#blocks, g:operator#surround#default_blocks)
 
     delfunction s:merge
 endif
@@ -41,6 +44,7 @@ endif
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
 let g:operator#surround#enable_xbrackets_mode = s:getg('enable_xbrackets_mode', 0)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
+let g:operator#surround#ignore_space = s:getg('ignore_space', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
@@ -111,10 +115,10 @@ function! s:get_block_from_input(motion)
         let input .= char
         let result = s:get_block_or_prefix_match(input, a:motion)
         if type(result) == type([])
-            return [input, result]
+            return result
         elseif ! result
             if g:operator#surround#uses_input_if_no_block
-                return [input, [input, input]]
+                return [input, input]
             else
                 call s:echomsg(input . ' is not defined. Please check g:operator#surround#blocks.', 'ErrorMsg')
                 return 0
@@ -162,19 +166,38 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
     endif
 endfunction
 
-" wrapper for repeat#set()
-function! s:repeat_set(input, count)
-    if ! exists('s:has_repeat_set')
-        try
-            call repeat#set("\<Plug>(operator-surround-repeat)".a:input, a:count)
-            let s:has_repeat_set = 1
-        catch /^Vim\%((\a\+)\)\=:E117/
-            let s:has_repeat_set = 0
-        endtry
-    elseif s:has_repeat_set
-        call repeat#set("\<Plug>(operator-surround-repeat)".a:input, a:count)
+" handle required information
+function! s:get_info(name)
+    if !exists('g:operator_surround')
+        let g:operator_surround = {}
+        let g:operator_surround.state = 0
+        let g:operator_surround.block = ''
     endif
+    return g:operator_surround[a:name]
 endfunction
+
+function! s:set_info(name, value)
+    if !exists('g:operator_surround')
+        call s:get_info('state')
+    endif
+    let g:operator_surround[a:name] = a:value
+endfunction
+
+function! operator#surround#certify_as_keymapping()
+    call s:set_info('state', 1)
+endfunction
+
+" check whether the target region should be extended to each end of lines or not.
+function! s:is_extended_blockwise_visual()
+    if getpos("'[")[0:2] != getpos("'<")[0:2] || getpos("']")[0:2] != getpos("'>")[0:2]
+        return 0
+    endif
+    normal! gv
+    let is_extended = winsaveview().curswant == 1/0
+    execute "normal! \<Esc>"
+    return is_extended
+endfunction
+
 " }}}
 
 " TODO
@@ -182,11 +205,39 @@ endfunction
 "   - add an option to escape for g:operator#surround#blocks
 
 " append {{{
+
+" Check it should skip white spaces.
+" If srounded object consists of white spaces only,
+" skipping white spaces doesn't work.
+function! s:should_skip_spaces()
+    let sel_save = &l:selection
+    let [save_g_reg, save_g_regtype] = [getreg('g'), getregtype('g')]
+    try
+        let &l:selection = 'inclusive'
+
+        " Update `> and `<
+        call s:normal("`[v`]\"gy")
+
+        return g:operator#surround#ignore_space &&
+                    \ getreg('g') !~# '^[[:space:]\n]*$'
+    finally
+        call setreg('g', save_g_reg, save_g_regtype)
+        let &l:selection = sel_save
+    endtry
+endfunction
 function! s:surround_characters(block_begin, block_end)
-    " Update `> and `<
-    call s:normal("`[v`]\<Esc>")
+    let should_skip_spaces = s:should_skip_spaces()
     " insert block to the region
-    call s:normal(printf("`>a%s\<Esc>`<i%s\<Esc>", a:block_end, a:block_begin))
+    call s:normal("`>")
+    if should_skip_spaces
+        call search('\S', 'bcW')
+    endif
+    call s:normal(printf("a%s\<Esc>", a:block_end))
+    call s:normal("`<")
+    if should_skip_spaces
+        call search('\S', 'cW')
+    endif
+    call s:normal(printf("i%s\<Esc>", a:block_begin))
 endfunction
 
 function! s:surround_lines(block_begin, block_end)
@@ -202,11 +253,12 @@ endfunction
 function! s:surround_blocks(block_begin, block_end)
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, end_col, _] = getpos("']")
+    let is_extended = s:is_extended_blockwise_visual()
     for line in range(start_line, last_line)
         " insert block to the one line in the block region
         call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
                     \        line,
-                    \        end_col,
+                    \        is_extended ? col([line, '$']) : end_col,
                     \        a:block_end,
                     \        start_col,
                     \        a:block_begin)
@@ -214,7 +266,7 @@ function! s:surround_blocks(block_begin, block_end)
     endfor
 endfunction
 
-function! s:append_block(block_pair, motion)
+function! s:append_block(block_pair, motion) abort
     let pos_save = getpos('.')
     let autoindent_save = &autoindent
     let cindent_save = &cindent
@@ -250,23 +302,29 @@ function! operator#surround#append(motion)
         return
     endif
 
-    let result = s:get_block_from_input(a:motion)
+    let state  = s:get_info('state')
+    let result = state ? s:get_block_from_input(a:motion) : s:get_info('block')
     if type(result) == type(0) && ! result
         return
     endif
-    let [input, block] = result
+    let block = result
 
     call s:append_block(block, a:motion)
 
-    call s:repeat_set(input, v:count)
+    call s:set_info('state', 0)
+    call s:set_info('block', block)
 endfunction
 " }}}
 
 " delete {{{
 function! s:get_surround_in_with_filetype(filetype, region)
+    let space_skipper = g:operator#surround#ignore_space
+                \ ? '\[[:space:]\n]\*'
+                \ : '\n\*'
+
     for b in g:operator#surround#blocks[a:filetype]
         " if the block surrounds the object
-        if match(a:region, '^\V\%(\s\|\n\)\*'.b.block[0].'\.\*'.b.block[1].'\%(\s\|\n\)\*\$') >= 0
+        if match(a:region, printf('^\V%s%s\.\*%s%s\$', space_skipper, b.block[0], b.block[1], space_skipper)) >= 0
             return b.block
         endif
     endfor
@@ -287,9 +345,33 @@ function! s:get_surround_in(region)
     endif
 endfunction
 
-function! s:delete_surround(visual)
-    let save_reg_g = getreg('g')
-    let save_regtype_g = getregtype('g')
+function! s:get_same_str_surround(region) abort
+    if g:operator#surround#ignore_space
+        let region = matchstr(a:region, '^[[:space:]\n]*\zs.*\ze[[:space:]\n]*$')
+    else
+        let region = matchstr(a:region, '^\n*\zs.*\ze\n*$')
+    endif
+
+    let len = strlen(region)
+
+    let [s, e] = [0, len - 1]
+
+    while region[s] ==# region[e] && s < len && e >= 0
+        let s += 1
+        let e -= 1
+    endwhile
+
+    if s == 0
+        throw 'vim-operator-surround: block is not found'
+    endif
+
+    let surround = region[ : s - 1]
+    return [surround, surround]
+endfunction
+
+function! s:delete_surround(visual) abort
+    let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
+    let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
     try
         call setreg('g', '', 'v')
         call s:normal('`['.a:visual.'`]"gy')
@@ -301,16 +383,7 @@ function! s:delete_surround(visual)
                 throw 'vim-operator-surround: block is not found'
             endif
 
-            " get the characters at both end
-            "   Note: Use old regex engine because NFA engine has trouble with
-            "   backward reference
-            let matchedlist = matchlist(region, (exists('+regexpengine') ? '\%#=1' : '').'^\s*\(\S\+\)\_.*\1\s*$')
-
-            if len(matchedlist) > 1
-                let block = [matchedlist[1], matchedlist[1]]
-            else
-                throw 'vim-operator-surround: block is not found'
-            endif
+            let block = s:get_same_str_surround(region)
         endif
 
         let put_command = s:get_paste_command(a:visual, [getpos("'[")[1:2], getpos("']")[1:2]], len(getline("']")))
@@ -318,8 +391,12 @@ function! s:delete_surround(visual)
         call s:normal('`['.a:visual.'`]"_d')
 
         " remove the former block and latter block
-        let after = substitute(region, '^\%(\s\|\n\)*\zs\V'.block[0], '', '')
-        let after = substitute(after, '\V'.block[1].'\ze\%(\s\|\n\)\*\$', '', '')
+        let space_skipper = g:operator#surround#ignore_space
+                    \ ? '\[[:space:]\n]\*'
+                    \ : '\n\*'
+
+        let after = substitute(region, '^\V'. space_skipper . '\zs' . block[0], '', '')
+        let after = substitute(after, '\V' . block[1] . '\ze' . space_skipper . '\$', '', '')
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
@@ -327,31 +404,34 @@ function! s:delete_surround(visual)
         call s:echomsg('no block matches to the region', 'ErrorMsg')
     finally
         call setreg('g', save_reg_g, save_regtype_g)
+        call setreg('"', save_reg_unnamed, save_regtype_unnamed)
     endtry
 endfunction
 
 function! s:delete_surrounds_in_block()
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, last_col, _] = getpos("']")
-    let save_reg_g = getreg('g')
-    let save_regtype_g = getregtype('g')
+    let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
+    let [save_reg_unnamed, save_regtype_unnamed] = [getreg('"'), getregtype('"')]
+    let is_extended = s:is_extended_blockwise_visual()
     try
         for line in range(start_line, last_line)
             " yank to set '[ and ']
             call s:normal(line.'gg')
-            let end_of_line_col = last_col > col('$')-1 ? col('$')-1 : last_col
+            let end_of_line_col = last_col > col('$')-1 || is_extended ? col('$')-1 : last_col
             call s:normal(printf('%d|v%d|"gy', start_col, end_of_line_col))
             call s:delete_surround('v')
         endfor
 
         " leave whole region as a history of buffer changes
-        call s:normal(printf("%dgg%d|\<C-v>`]\"gy", start_line, start_col))
+        call s:normal(printf("%dgg%d|\<C-v>`]%s\"gy", start_line, start_col, is_extended ? '$' : ''))
     finally
         call setreg('g', save_reg_g, save_regtype_g)
+        call setreg('"', save_reg_unnamed, save_regtype_unnamed)
     endtry
 endfunction
 
-function! operator#surround#delete(motion)
+function! operator#surround#delete(motion) abort
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
     endif
@@ -380,16 +460,18 @@ endfunction
 " replace {{{
 function! operator#surround#replace(motion)
     " get input at first because of undo history
-    let result = s:get_block_from_input(a:motion)
+    let state  = s:get_info('state')
+    let result = state ? s:get_block_from_input(a:motion) : s:get_info('block')
     if type(result) == type(0) && ! result
         return
     endif
-    let [input, block] = result
+    let block = result
 
     call operator#surround#delete(a:motion)
     call s:append_block(block, a:motion)
 
-    call s:repeat_set(input, v:count)
+    call s:set_info('state', 0)
+    call s:set_info('block', block)
 endfunction
 " }}}
 
