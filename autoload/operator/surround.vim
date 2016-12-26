@@ -66,10 +66,12 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
                         return [strpart(a:input, 0, idx) . b.block[0], b.block[1]]
                     endif
                 endfor
-                return 1
             endif
         endif
     endfor
+    if g:operator#surround#enable_xbrackets_mode
+        return 1
+    endif
     return 0
 endfunction
 
