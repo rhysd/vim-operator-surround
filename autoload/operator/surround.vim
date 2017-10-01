@@ -52,7 +52,7 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
             if index(b.keys, a:input) >= 0
                 " completely matched
                 return b.block
-            elseif filter(copy(b.keys), 'v:val =~# "^\\V'.escape(a:input, '"').'"') != []
+            elseif filter(copy(b.keys), 'v:val =~# "^\\V'.escape(a:input, '"\').'"') != []
                 " prefix matching
                 return 1
             endif
