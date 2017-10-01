@@ -373,8 +373,8 @@ function! s:delete_surround(visual) abort
                     \ ? '\[[:space:]\n]\*'
                     \ : '\n\*'
 
-        let after = substitute(region, '^\V'. space_skipper . '\zs' . block[0], '', '')
-        let after = substitute(after, '\V' . block[1] . '\ze' . space_skipper . '\$', '', '')
+        let after = substitute(region, '^\V'. space_skipper . '\zs' . escape(block[0], '\') , '', '')
+        let after = substitute(after, '\V' . escape(block[1], '\') . '\ze' . space_skipper . '\$', '', '')
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
