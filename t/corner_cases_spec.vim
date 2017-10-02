@@ -46,3 +46,35 @@ describe 'auto indentation'
     end
 
 end
+
+describe 'backslash in surrounds'
+    before
+        let s:saved_blocks = g:operator#surround#blocks
+        let g:operator#surround#blocks = {}
+        let g:operator#surround#blocks['-'] = [
+            \  {'block' : ['\', '\'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['\']},
+            \  {'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')']},
+            \ ]
+        new
+        map <buffer>sa <Plug>(operator-surround-append)
+        map <buffer>sr <Plug>(operator-surround-replace)
+    end
+
+    after
+        close!
+        let g:operator#surround#blocks = s:saved_blocks
+    end
+
+    it 'can be contained in surroundings (#18, #31)'
+        Line 'hoge'
+        normal saiw\
+        Expect getline('.') ==# '\hoge\'
+    end
+
+    it 'can be replaced properly as target'
+        Line '\hoge\'
+        normal! gg0v$
+        normal sr(
+        Expect getline('.') ==# '(hoge)'
+    end
+end
