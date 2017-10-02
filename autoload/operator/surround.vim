@@ -52,7 +52,7 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
             if index(b.keys, a:input) >= 0
                 " completely matched
                 return b.block
-            elseif filter(copy(b.keys), 'v:val =~# "^\\V'.escape(a:input, '"').'"') != []
+            elseif filter(copy(b.keys), 'v:val =~# "^\\V'.escape(a:input, '"\').'"') != []
                 " prefix matching
                 return 1
             endif
@@ -373,8 +373,8 @@ function! s:delete_surround(visual) abort
                     \ ? '\[[:space:]\n]\*'
                     \ : '\n\*'
 
-        let after = substitute(region, '^\V'. space_skipper . '\zs' . block[0], '', '')
-        let after = substitute(after, '\V' . block[1] . '\ze' . space_skipper . '\$', '', '')
+        let after = substitute(region, '^\V'. space_skipper . '\zs' . escape(block[0], '\') , '', '')
+        let after = substitute(after, '\V' . escape(block[1], '\') . '\ze' . space_skipper . '\$', '', '')
 
         call setreg('g', after, a:visual)
         call s:normal('"g'.put_command)
