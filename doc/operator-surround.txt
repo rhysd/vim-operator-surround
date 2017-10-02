@@ -88,7 +88,7 @@ directory.  Vim config directory is usually $HOME/vimfiles on Windows or
 ==============================================================================
 DEPENDENCY                                        *operator-surround-dependency*
 
-|operator-user| (requried)
+|operator-user| (required)
     https://github.com/kana/vim-operator-user
 
 
