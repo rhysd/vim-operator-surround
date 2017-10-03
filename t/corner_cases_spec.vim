@@ -78,3 +78,54 @@ describe 'backslash in surrounds'
         Expect getline('.') ==# '(hoge)'
     end
 end
+
+describe 'blank line inside block'
+
+    before
+        map sa <Plug>(operator-surround-append)
+        map sr <Plug>(operator-surround-replace)
+        map sd <Plug>(operator-surround-delete)
+        new
+    end
+
+    after
+        close!
+        unmap sa
+        unmap sr
+        unmap sd
+    end
+
+    it 'should be ignored when adding surrounds'
+        1Line "hoge"
+        2Line ""
+        3Line "hoge"
+        execute 'normal' "gg0\<C-v>G$sa("
+
+        Expect getline(1) ==# "(hoge)"
+        Expect getline(2) ==# ""
+        Expect getline(3) ==# "(hoge)"
+    end
+
+    it 'should be ignored when replacing surrounds'
+        1Line "(hoge)"
+        2Line ""
+        3Line "(hoge)"
+        execute 'normal' "gg0\<C-v>G$sr'"
+
+        Expect getline(1) ==# "'hoge'"
+        Expect getline(2) ==# ""
+        Expect getline(3) ==# "'hoge'"
+    end
+
+    it 'should be ignored when deleting surrounds'
+        1Line "'hoge'"
+        2Line ""
+        3Line "'hoge'"
+        execute 'normal' "gg0\<C-v>G$sd'"
+
+        Expect getline(1) ==# "hoge"
+        Expect getline(2) ==# ""
+        Expect getline(3) ==# "hoge"
+    end
+
+end

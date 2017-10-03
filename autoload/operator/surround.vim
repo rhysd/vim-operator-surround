@@ -233,6 +233,9 @@ function! s:surround_blocks(block_begin, block_end)
     let [_, last_line, end_col, _] = getpos("']")
     let is_extended = s:is_extended_blockwise_visual()
     for line in range(start_line, last_line)
+        if getline(line) ==# ''
+          continue
+        endif
         " insert block to the one line in the block region
         call s:normal(printf("%dgg%d|a%s\<Esc>%d|i%s\<Esc>",
                     \        line,
@@ -394,6 +397,9 @@ function! s:delete_surrounds_in_block()
     let is_extended = s:is_extended_blockwise_visual()
     try
         for line in range(start_line, last_line)
+            if getline(line) ==# ''
+              continue
+            endif
             " yank to set '[ and ']
             call s:normal(line.'gg')
             let end_of_line_col = last_col > col('$')-1 || is_extended ? col('$')-1 : last_col
