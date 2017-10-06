@@ -233,7 +233,7 @@ function! s:surround_blocks(block_begin, block_end)
     let [_, last_line, end_col, _] = getpos("']")
     let is_extended = s:is_extended_blockwise_visual()
     for line in range(start_line, last_line)
-        if getline(line) ==# ''
+        if getline(line) =~# '^\s*$'
           continue
         endif
         " insert block to the one line in the block region
@@ -397,7 +397,7 @@ function! s:delete_surrounds_in_block()
     let is_extended = s:is_extended_blockwise_visual()
     try
         for line in range(start_line, last_line)
-            if getline(line) ==# ''
+            if getline(line) =~# '^\s*$'
               continue
             endif
             " yank to set '[ and ']
