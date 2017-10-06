@@ -3,17 +3,17 @@ Operator to Surround a Text Object
 [![Build Status](https://travis-ci.org/rhysd/vim-operator-surround.svg?branch=master)](https://travis-ci.org/rhysd/vim-operator-surround)
 
 This plugin provides Vim operator mappings to deal with surrounds like `()`, `""` and so on.
-In addition, both end of the text object are the same character, vim-operator-surround recognizes them as a surround (this behavior is customizable with some variables).
+In addition, both end of the text object are the same character, vim-operator-surround recognizes
+them as a surround (this behavior is customizable with some variables).
 
 It can
 - surround a text object with a specified block.
 - replace a surround in a text object with a specified block.
 - delete a surround in a text object.
 
-This plugin is more useful with [vim-textobj-multiblock](https://github.com/osyo-manga/vim-textobj-multiblock), [vim-textobj-between](https://github.com/thinca/vim-textobj-between) or [vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
+This plugin would be more useful with [vim-textobj-between](https://github.com/thinca/vim-textobj-between) or
+[vim-textobj-anyblock](https://github.com/rhysd/vim-textobj-anyblock).
 And you can customize and add surround definitions in global and filetype specific scope.
-
-![Screen shot](http://gifzo.net/X3HpKwQEyC.gif)
 
 
 ## Policy of This Plugin (or The Reason Why I Don't Use [vim-surround](https://github.com/tpope/vim-surround))
@@ -25,13 +25,14 @@ And you can customize and add surround definitions in global and filetype specif
 
 ## Requirements
 
-This plugin uses [vim-operator-user](https://github.com/kana/vim-operator-user). Please install it in advance.
+This plugin uses [vim-operator-user](https://github.com/kana/vim-operator-user).
+Please install it in advance.
+
 
 ## Customize
 
 Set your favorite blocks to `g:operator#surround#blocks`. And control the behavior with some variables.
-
-(More explanation about this is todo)
+Please read [doc](doc/operator-surround.txt) for more details.
 
 
 ## Example of `vimrc`
