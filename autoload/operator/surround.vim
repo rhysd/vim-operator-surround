@@ -42,11 +42,15 @@ if ! s:getg('no_default_blocks', 0)
 endif
 
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
+let g:operator#surround#enable_xbrackets_mode = s:getg('enable_xbrackets_mode', 0)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
 let g:operator#surround#ignore_space = s:getg('ignore_space', 1)
 " }}}
 " input {{{
 function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
+    if g:operator#surround#enable_xbrackets_mode
+        echo 'block (xbrackets) : '.a:input
+    endif
     for b in g:operator#surround#blocks[a:filetype]
         if index(b.motionwise, a:motion) >= 0
             if index(b.keys, a:input) >= 0
@@ -55,9 +59,19 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
             elseif filter(copy(b.keys), 'v:val =~# "^\\V'.escape(a:input, '"\').'"') != []
                 " prefix matching
                 return 1
+            elseif g:operator#surround#enable_xbrackets_mode
+                for key in b.keys
+                    let idx = stridx(a:input, key)
+                    if idx >= 0
+                        return [strpart(a:input, 0, idx) . b.block[0], b.block[1]]
+                    endif
+                endfor
             endif
         endif
     endfor
+    if g:operator#surround#enable_xbrackets_mode
+        return 1
+    endif
     return 0
 endfunction
 
@@ -78,11 +92,20 @@ function! s:get_block_or_prefix_match(input, motion)
 endfunction
 
 function! s:get_block_from_input(motion)
-    echon 'block : '
+    if ! g:operator#surround#enable_xbrackets_mode
+        echon 'block : '
+    else
+        echon 'block (xbrackets) : '
+    endif
     let input = ''
     while 1
         let char = getchar()
         let char = type(char) == type(0) ? nr2char(char) : char
+
+        if char == "\<BS>"
+          let input = strpart(input, 0, strlen(input) - 1)
+          let char = ''
+        endif
 
         " cancel when <C-c> or <Esc> is input
         if char == "\<C-c>" || char == "\<Esc>"
