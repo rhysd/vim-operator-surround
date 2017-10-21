@@ -24,33 +24,6 @@ endtry
 describe 'Default settings'
     it 'provide variables to customize'
         Expect 'g:operator#surround#blocks' to_exist
-        Expect g:operator#surround#blocks == {
-                \   'test' : [
-                \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] },
-                \   ],
-                \   '-' : [
-                \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] },
-                \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
-                \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
-                \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
-                \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
-                \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
-                \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
-                \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
-                \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
-                \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
-                \   ],
-                \ }
-        for [_, ft] in items(g:operator#surround#blocks)
-            for b in ft
-                for [k, v] in items(b)
-                    Expect k to_be_string
-                    Expect k =~# '\(block\|motionwise\|keys\)'
-                    Expect v to_be_list
-                endfor
-            endfor
-        endfor
-
         Expect 'g:operator#surround#uses_input_if_no_block' to_exist_and_default_to 1
         Expect 'g:operator#surround#recognizes_both_ends_as_surround' to_exist_and_default_to 1
         Expect 'g:operator#surround#ignore_space' to_exist_and_default_to 1

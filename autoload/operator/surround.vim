@@ -24,30 +24,16 @@ let g:operator#surround#default_blocks =
                 \ }
 lockvar! g:operator#surround#default_blocks
 
-if ! s:getg('no_default_blocks', 0)
-
-    function! s:merge(d1, d2)
-        for [k, v] in items(a:d2)
-            if has_key(a:d1, k)
-                call extend(a:d1[k], v)
-            else
-                let a:d1[k] = v
-            endif
-        endfor
-    endfunction
-
-    call s:merge(g:operator#surround#blocks, g:operator#surround#default_blocks)
-
-    delfunction s:merge
-endif
-
 let g:operator#surround#uses_input_if_no_block = s:getg('uses_input_if_no_block', 1)
 let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_both_ends_as_surround', 1)
 let g:operator#surround#ignore_space = s:getg('ignore_space', 1)
 " }}}
 " input {{{
-function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
-    for b in g:operator#surround#blocks[a:filetype]
+function! s:get_block_or_prefix_match_in_filetype(blocks, filetype, input, motion)
+    if !has_key(a:blocks, a:filetype)
+        return 0
+    endif
+    for b in a:blocks[a:filetype]
         if index(b.motionwise, a:motion) >= 0
             if index(b.keys, a:input) >= 0
                 " completely matched
@@ -61,20 +47,34 @@ function! s:get_block_or_prefix_match_in_filetype(filetype, input, motion)
     return 0
 endfunction
 
-function! s:get_block_or_prefix_match(input, motion)
-    if has_key(g:operator#surround#blocks, &filetype)
-        let result = s:get_block_or_prefix_match_in_filetype(&filetype, a:input, a:motion)
-        if type(result) == type([]) || result
-            return result
-        endif
+function! s:get_block_or_prefix_match_blocks(blocks, input, motion)
+    let result = s:get_block_or_prefix_match_in_filetype(a:blocks, &filetype, a:input, a:motion)
+    if type(result) == type([]) || result
+        return result
     endif
 
     " '-' has the lowest priority
-    if has_key(g:operator#surround#blocks, '-')
-        return s:get_block_or_prefix_match_in_filetype('-', a:input, a:motion)
-    else
-        return 0
+    return s:get_block_or_prefix_match_in_filetype(a:blocks, '-', a:input, a:motion)
+endfunction
+
+function! s:get_block_or_prefix_match(input, motion)
+    if exists('b:operator#surround#blocks')
+        let ret = s:get_block_or_prefix_match_blocks(b:operator#surround#blocks, a:input, a:motion)
+        if type(ret) == type([]) || ret
+            return ret
+        endif
     endif
+
+    let ret = s:get_block_or_prefix_match_blocks(g:operator#surround#blocks, a:input, a:motion)
+    if type(ret) == type([]) || ret
+        return ret
+    endif
+
+    if !s:getg('no_default_blocks', 0)
+        return s:get_block_or_prefix_match_blocks(g:operator#surround#default_blocks, a:input, a:motion)
+    endif
+
+    return 0
 endfunction
 
 function! s:get_block_from_input(motion)
@@ -298,12 +298,12 @@ endfunction
 " }}}
 
 " delete {{{
-function! s:get_surround_in_with_filetype(filetype, region)
+function! s:get_surround_in_with_filetype(filetype, blocks, region)
     let space_skipper = g:operator#surround#ignore_space
                 \ ? '\[[:space:]\n]\*'
                 \ : '\n\*'
 
-    for b in g:operator#surround#blocks[a:filetype]
+    for b in a:blocks[a:filetype]
         " if the block surrounds the object
         if match(a:region, printf('^\V%s%s\.\*%s%s\$', space_skipper, b.block[0], b.block[1], space_skipper)) >= 0
             return b.block
@@ -312,18 +312,34 @@ function! s:get_surround_in_with_filetype(filetype, region)
     return []
 endfunction
 
-function! s:get_surround_in(region)
-    if has_key(g:operator#surround#blocks, &filetype)
-        let result = s:get_surround_in_with_filetype(&filetype, a:region)
+function! s:get_surround_from_blocks_in(blocks, region)
+    if has_key(a:blocks, &filetype)
+        let result = s:get_surround_in_with_filetype(&filetype, a:blocks, a:region)
         if result != [] | return result | endif
     endif
 
     " '-' has the lowest priority
-    if has_key(g:operator#surround#blocks, '-')
-        return s:get_surround_in_with_filetype('-', a:region)
+    if has_key(a:blocks, '-')
+        return s:get_surround_in_with_filetype('-', a:blocks, a:region)
     else
         return []
     endif
+endfunction
+
+function! s:get_surround_in(region)
+    if exists('b:operator#surround#blocks')
+        let ret = s:get_surround_from_blocks_in(b:operator#surround#blocks, a:region)
+        if ret != [] | return ret | endif
+    endif
+
+    let ret = s:get_surround_from_blocks_in(g:operator#surround#blocks, a:region)
+    if ret != [] | return ret | endif
+
+    if !s:getg('no_default_blocks', 0)
+        return s:get_surround_from_blocks_in(g:operator#surround#default_blocks, a:region)
+    endif
+
+    return []
 endfunction
 
 function! s:get_same_str_surround(region) abort
