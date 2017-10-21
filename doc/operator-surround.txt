@@ -124,10 +124,11 @@ These mappings are for |mapmode-x| and |mapmode-n|.
 VARIABLES                                          *operator-surround-variables*
 
 g:operator#surround#blocks                          *g:operator#surround#blocks*
+                                                    *b:operator#surround#blocks*
 
-    Block definitions.  This is |Dictionary| of |List| whose elements represent
-    a block.  This value is merged with default definitions if you do not specify
-    |g:operator#surround#no_default_blocks|.
+    Block definitions.  This is |Dictionary| of |List| which elements represent
+    a block.  This value has higher priority than default blocks so you can
+    define your own blocks.
 
     For example, below is default definitions:
 >
@@ -170,12 +171,32 @@ g:operator#surround#blocks                          *g:operator#surround#blocks*
         more than 1.  In above example, if you input '<Space>(', ['( ', ' )']
         block would be selected.
 
+    You can also define buffer local version |b:operator#surround#blocks|.
+    It is used only in the buffer and has higher priority than
+    |g:operator#surround#blocks|.
+
 g:operator#surround#default_blocks          *g:operator#surround#default_blocks*
 
     The default blocks.  This variable is readonly.  If you will modify this
     variable, an exception will be thrown.  The value is shown in
     |g:operator#surround#blocks|.
 
+    The default block definitions are:
+>
+    \ {
+    \   '-' : [
+    \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
+    \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
+    \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
+    \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
+    \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
+    \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
+    \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
+    \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
+    \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
+    \   ],
+    \ }
+<
                                     *g:operator#surround#uses_input_if_no_block*
 g:operator#surround#uses_input_if_no_block
 
@@ -196,25 +217,9 @@ g:operator#surround#recognizes_both_ends_as_surround
 
 g:operator#surround#no_default_blocks    *g:operator#surround#no_default_blocks*
 
-    If the value is non-zero, default block definitions are not merged with
-    |g:operator#surround#blocks|.  If the value is 0, |g:operator#surround#blocks|
-    is merged with the default block definitions at loading.
-    The default block definitions are:
->
-    \ {
-    \   '-' : [
-    \       { 'block' : ['(', ')'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['(', ')'] },
-    \       { 'block' : ['[', ']'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['[', ']'] },
-    \       { 'block' : ['{', '}'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['{', '}'] },
-    \       { 'block' : ['<', '>'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['<', '>'] },
-    \       { 'block' : ['"', '"'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['"'] },
-    \       { 'block' : ["'", "'"], 'motionwise' : ['char', 'line', 'block'], 'keys' : ["'"] },
-    \       { 'block' : ['`', '`'], 'motionwise' : ['char', 'line', 'block'], 'keys' : ['`'] },
-    \       { 'block' : ['( ', ' )'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' (', ' )'] },
-    \       { 'block' : ['{ ', ' }'], 'motionwise' : ['char', 'line', 'block'], 'keys' : [' {', ' }'] },
-    \   ],
-    \ }
-<
+    If the value is non-zero, default block definitions defined in
+    |g:operator#surround#default_blocks| are not used.
+
     The default value is 0.
 
 g:operator#surround#ignore_space              *g:operator#surround#ignore_space*
