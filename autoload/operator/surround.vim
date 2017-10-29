@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " customization {{{
-function! s:getg(name, default)
+function! s:getg(name, default) abort
     return get(g:, 'operator#surround#'.a:name, a:default)
 endfunction
 
@@ -29,7 +29,7 @@ let g:operator#surround#recognizes_both_ends_as_surround = s:getg('recognizes_bo
 let g:operator#surround#ignore_space = s:getg('ignore_space', 1)
 " }}}
 " input {{{
-function! s:get_block_or_prefix_match_in_filetype(blocks, filetype, input, motion)
+function! s:get_block_or_prefix_match_in_filetype(blocks, filetype, input, motion) abort
     if !has_key(a:blocks, a:filetype)
         return 0
     endif
@@ -47,7 +47,7 @@ function! s:get_block_or_prefix_match_in_filetype(blocks, filetype, input, motio
     return 0
 endfunction
 
-function! s:get_block_or_prefix_match_blocks(blocks, input, motion)
+function! s:get_block_or_prefix_match_blocks(blocks, input, motion) abort
     let result = s:get_block_or_prefix_match_in_filetype(a:blocks, &filetype, a:input, a:motion)
     if type(result) == type([]) || result
         return result
@@ -57,7 +57,7 @@ function! s:get_block_or_prefix_match_blocks(blocks, input, motion)
     return s:get_block_or_prefix_match_in_filetype(a:blocks, '-', a:input, a:motion)
 endfunction
 
-function! s:get_block_or_prefix_match(input, motion)
+function! s:get_block_or_prefix_match(input, motion) abort
     if exists('b:operator#surround#blocks')
         let ret = s:get_block_or_prefix_match_blocks(b:operator#surround#blocks, a:input, a:motion)
         if type(ret) == type([]) || ret
@@ -77,7 +77,7 @@ function! s:get_block_or_prefix_match(input, motion)
     return 0
 endfunction
 
-function! s:get_block_from_input(motion)
+function! s:get_block_from_input(motion) abort
     echon 'block : '
     let input = ''
     while 1
@@ -85,7 +85,7 @@ function! s:get_block_from_input(motion)
         let char = type(char) == type(0) ? nr2char(char) : char
 
         " cancel when <C-c> or <Esc> is input
-        if char == "\<C-c>" || char == "\<Esc>"
+        if char ==# "\<C-c>" || char ==# "\<Esc>"
             echo 'canceled.'
             return 0
         endif
@@ -107,21 +107,21 @@ function! s:get_block_from_input(motion)
 endfunction
 " }}}
 " helpers {{{
-function! s:is_empty_region(begin, end)
+function! s:is_empty_region(begin, end) abort
     return a:begin[1] == a:end[1] && a:end[2] < a:begin[2]
 endfunction
 
-function! s:normal(cmd)
+function! s:normal(cmd) abort
     execute 'keepjumps' 'silent' 'normal!' a:cmd
 endfunction
 
-function! s:echomsg(message, ...)
+function! s:echomsg(message, ...) abort
     if a:0 == 1 | execute 'echohl' a:1 | endif
     echomsg type(a:message) == type('') ? a:message : string(a:message)
     if a:0 == 1 | echohl None | endif
 endfunction
 
-function! s:get_paste_command(visual, region, motion_end_last_col)
+function! s:get_paste_command(visual, region, motion_end_last_col) abort
     let [motion_end_line, motion_end_col] = a:region[1]
     let start_line = a:region[0][0]
 
@@ -144,12 +144,12 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
     endif
 endfunction
 
-function! operator#surround#from_keymap()
+function! operator#surround#from_keymap() abort
     let s:state.from_keymap = 1
 endfunction
 
 " check whether the target region should be extended to each end of lines or not.
-function! s:is_extended_blockwise_visual()
+function! s:is_extended_blockwise_visual() abort
     if getpos("'[")[0:2] != getpos("'<")[0:2] || getpos("']")[0:2] != getpos("'>")[0:2]
         return 0
     endif
@@ -172,7 +172,7 @@ let s:state = { 'from_keymap' : 0, 'block' : '' }
 " Check it should skip white spaces.
 " If srounded object consists of white spaces only,
 " skipping white spaces doesn't work.
-function! s:should_skip_spaces()
+function! s:should_skip_spaces() abort
     let sel_save = &l:selection
     let [save_g_reg, save_g_regtype] = [getreg('g'), getregtype('g')]
     try
@@ -188,22 +188,22 @@ function! s:should_skip_spaces()
         let &l:selection = sel_save
     endtry
 endfunction
-function! s:surround_characters(block_begin, block_end)
+function! s:surround_characters(block_begin, block_end) abort
     let should_skip_spaces = s:should_skip_spaces()
     " insert block to the region
-    call s:normal("`>")
+    call s:normal('`>')
     if should_skip_spaces
         call search('\S', 'bcW')
     endif
     call s:normal(printf("a%s\<Esc>", a:block_end))
-    call s:normal("`<")
+    call s:normal('`<')
     if should_skip_spaces
         call search('\S', 'cW')
     endif
     call s:normal(printf("i%s\<Esc>", a:block_begin))
 endfunction
 
-function! s:surround_lines(block_begin, block_end)
+function! s:surround_lines(block_begin, block_end) abort
     " insert block to the head and tail of lines
     call s:normal( printf("%dgg$a%s\<Esc>%dgg0i%s\<Esc>",
                          \ getpos("']")[1],
@@ -213,7 +213,7 @@ function! s:surround_lines(block_begin, block_end)
                  \ )
 endfunction
 
-function! s:surround_blocks(block_begin, block_end)
+function! s:surround_blocks(block_begin, block_end) abort
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, end_col, _] = getpos("']")
     let is_extended = s:is_extended_blockwise_visual()
@@ -252,7 +252,7 @@ function! s:append_block(block_pair, motion) abort
             call s:surround_blocks(a:block_pair[0], a:block_pair[1])
         else
             " never reached here
-            throw "Invalid motion"
+            throw 'Invalid motion: ' . a:motion
         endif
     finally
         call setpos('.', pos_save)
@@ -263,7 +263,7 @@ function! s:append_block(block_pair, motion) abort
     endtry
 endfunction
 
-function! operator#surround#append(motion)
+function! operator#surround#append(motion) abort
     if s:is_empty_region(getpos("'["), getpos("']"))
         return
     endif
@@ -282,7 +282,7 @@ endfunction
 " }}}
 
 " delete {{{
-function! s:get_surround_in_with_filetype(filetype, blocks, region)
+function! s:get_surround_in_with_filetype(filetype, blocks, region) abort
     let space_skipper = g:operator#surround#ignore_space
                 \ ? '\[[:space:]\n]\*'
                 \ : '\n\*'
@@ -296,7 +296,7 @@ function! s:get_surround_in_with_filetype(filetype, blocks, region)
     return []
 endfunction
 
-function! s:get_surround_from_blocks_in(blocks, region)
+function! s:get_surround_from_blocks_in(blocks, region) abort
     if has_key(a:blocks, &filetype)
         let result = s:get_surround_in_with_filetype(&filetype, a:blocks, a:region)
         if result != [] | return result | endif
@@ -310,7 +310,7 @@ function! s:get_surround_from_blocks_in(blocks, region)
     endif
 endfunction
 
-function! s:get_surround_in(region)
+function! s:get_surround_in(region) abort
     if exists('b:operator#surround#blocks')
         let ret = s:get_surround_from_blocks_in(b:operator#surround#blocks, a:region)
         if ret != [] | return ret | endif
@@ -389,7 +389,7 @@ function! s:delete_surround(visual) abort
     endtry
 endfunction
 
-function! s:delete_surrounds_in_block()
+function! s:delete_surrounds_in_block() abort
     let [_, start_line, start_col, _] = getpos("'[")
     let [_, last_line, last_col, _] = getpos("']")
     let [save_reg_g, save_regtype_g] = [getreg('g'), getregtype('g')]
@@ -432,7 +432,7 @@ function! operator#surround#delete(motion) abort
             call s:delete_surrounds_in_block()
         else
             " never reached here
-            throw "Invalid motion"
+            throw 'Invalid motion: ' . a:motion
         endif
     finally
         call setpos('.', pos)
@@ -442,7 +442,7 @@ endfunction
 " }}}
 
 " replace {{{
-function! operator#surround#replace(motion)
+function! operator#surround#replace(motion) abort
     " get input at first because of undo history
     let result = s:state.from_keymap ? s:get_block_from_input(a:motion) : s:state.block
     if type(result) == type(0) && ! result
