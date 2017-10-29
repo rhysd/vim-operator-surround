@@ -144,25 +144,8 @@ function! s:get_paste_command(visual, region, motion_end_last_col)
     endif
 endfunction
 
-" handle required information
-function! s:get_info(name)
-    if !exists('g:operator_surround')
-        let g:operator_surround = {}
-        let g:operator_surround.state = 0
-        let g:operator_surround.block = ''
-    endif
-    return g:operator_surround[a:name]
-endfunction
-
-function! s:set_info(name, value)
-    if !exists('g:operator_surround')
-        call s:get_info('state')
-    endif
-    let g:operator_surround[a:name] = a:value
-endfunction
-
-function! operator#surround#certify_as_keymapping()
-    call s:set_info('state', 1)
+function! operator#surround#from_keymap()
+    let s:state.from_keymap = 1
 endfunction
 
 " check whether the target region should be extended to each end of lines or not.
@@ -181,6 +164,8 @@ endfunction
 " TODO
 " - escape string when the surround is "" or ''
 "   - add an option to escape for g:operator#surround#blocks
+
+let s:state = { 'from_keymap' : 0, 'block' : '' }
 
 " append {{{
 
@@ -283,8 +268,7 @@ function! operator#surround#append(motion)
         return
     endif
 
-    let state  = s:get_info('state')
-    let result = state ? s:get_block_from_input(a:motion) : s:get_info('block')
+    let result = s:state.from_keymap ? s:get_block_from_input(a:motion) : s:state.block
     if type(result) == type(0) && ! result
         return
     endif
@@ -292,8 +276,8 @@ function! operator#surround#append(motion)
 
     call s:append_block(block, a:motion)
 
-    call s:set_info('state', 0)
-    call s:set_info('block', block)
+    let s:state.from_keymap = 0
+    let s:state.block = block
 endfunction
 " }}}
 
@@ -460,8 +444,7 @@ endfunction
 " replace {{{
 function! operator#surround#replace(motion)
     " get input at first because of undo history
-    let state  = s:get_info('state')
-    let result = state ? s:get_block_from_input(a:motion) : s:get_info('block')
+    let result = s:state.from_keymap ? s:get_block_from_input(a:motion) : s:state.block
     if type(result) == type(0) && ! result
         return
     endif
@@ -470,8 +453,8 @@ function! operator#surround#replace(motion)
     call operator#surround#delete(a:motion)
     call s:append_block(block, a:motion)
 
-    call s:set_info('state', 0)
-    call s:set_info('block', block)
+    let s:state.from_keymap = 0
+    let s:state.block = block
 endfunction
 " }}}
 
