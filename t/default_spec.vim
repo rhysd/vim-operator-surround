@@ -6,6 +6,8 @@ call vspec#matchers#load()
 set rtp+=~/.vim/bundle/vim-operator-user
 runtime plugin/operator/surround.vim
 
+call operator#surround#append('char')
+
 let g:operator#surround#blocks = {
             \ '-' : [
             \       { 'block' : ['a', 'b'], 'motionwise' : [], 'keys' : ["\<Left>"] }
