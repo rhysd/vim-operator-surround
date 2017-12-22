@@ -6,7 +6,10 @@ call vspec#matchers#load()
 set rtp+=~/.vim/bundle/vim-operator-user
 runtime plugin/operator/surround.vim
 
-call operator#surround#append('char')
+try
+    call operator#surround#append('char')
+catch
+endtry
 
 let g:operator#surround#blocks = {
             \ '-' : [
