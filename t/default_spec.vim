@@ -15,12 +15,6 @@ let g:operator#surround#blocks = {
             \ ]
             \ }
 
-try
-    call feedkeys('(')
-    call operator#surround#append('char')
-catch
-endtry
-
 describe 'Default settings'
     it 'provide variables to customize'
         Expect 'g:operator#surround#blocks' to_exist
