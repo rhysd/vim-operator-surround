@@ -174,6 +174,7 @@ let s:state = { 'from_keymap' : 0, 'block' : '' }
 " skipping white spaces doesn't work.
 function! s:should_skip_spaces() abort
     let sel_save = &l:selection
+    let [save_default_reg, save_default_regtype] = [getreg('"'), getregtype('"')]
     let [save_g_reg, save_g_regtype] = [getreg('g'), getregtype('g')]
     try
         let &l:selection = 'inclusive'
@@ -185,6 +186,7 @@ function! s:should_skip_spaces() abort
                     \ getreg('g') !~# '^[[:space:]\n]*$'
     finally
         call setreg('g', save_g_reg, save_g_regtype)
+        call setreg('"', save_default_reg, save_default_regtype)
         let &l:selection = sel_save
     endtry
 endfunction
