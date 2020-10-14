@@ -329,11 +329,7 @@ function! s:get_surround_in(region) abort
 endfunction
 
 function! s:get_same_str_surround(region) abort
-    if g:operator#surround#ignore_space
-        let region = matchstr(a:region, '^[[:space:]\n]*\zs.*\ze[[:space:]\n]*$')
-    else
-        let region = matchstr(a:region, '^\n*\zs.*\ze\n*$')
-    endif
+    let region = matchstr(a:region, '^[[:space:]\n]*\zs.*\ze[[:space:]\n]*$')
 
     let len = strlen(region)
 
@@ -374,9 +370,7 @@ function! s:delete_surround(visual) abort
         call s:normal('`['.a:visual.'`]"_d')
 
         " remove the former block and latter block
-        let space_skipper = g:operator#surround#ignore_space
-                    \ ? '\[[:space:]\n]\*'
-                    \ : '\n\*'
+        let space_skipper = '\[[:space:]\n]\*'
 
         let after = substitute(region, '^\V'. space_skipper . '\zs' . escape(block[0], '\') , '', '')
         let after = substitute(after, '\V' . escape(block[1], '\') . '\ze' . space_skipper . '\$', '', '')
